@@ -10,12 +10,13 @@ phase ≈ one small commit. After each milestone, wait for user verification.
 - [x] Base layout shell with non-custodial banner + phase placeholders (Simple)
 - [x] Project operating files (CLAUDE/PRD/PLANNING/TASKS, commands, agents) (Simple)
 
-## Milestone 2 — Wallet + balances (Phase 2)
-- [ ] `src/config/wagmi.ts`: createConfig(tempoModerato + tempoWallet), providers in main.tsx (Medium)
-- [ ] `src/config/tokens.ts`: AlphaUSD constant (address, decimals=6, symbol) (Simple)
-- [ ] Connect / disconnect UI; show address + chain badge; wrong-network prompt (Medium)
-- [ ] Read + display AlphaUSD balance (viem/tempo balance action or ERC-20 read) (Medium)
-- [ ] Done: connect on Moderato, balance visible; build + lint pass
+## Milestone 2 — Wallet + balances (Phase 2) ✅ (pending user runtime verification)
+- [x] `src/config/wagmi.ts`: createConfig(tempoModerato + tempoWallet), providers in main.tsx (Medium)
+- [x] `src/config/tokens.ts`: AlphaUSD constant (address, decimals=6, symbol) (Simple)
+- [x] Connect / disconnect UI; show address + chain badge; wrong-network prompt (Medium)
+- [x] Read + display AlphaUSD balance via ERC-20 `balanceOf` + `formatUnits(_, 6)` (Medium)
+- [~] Done: connect on Moderato + balance visible — build + lint pass; on-chain connect to be
+      verified by the user in a real browser (headless preview can't load the mkcert HTTPS dev)
 
 ## Milestone 3 — CSV import + validation (Phase 3)
 - [ ] `src/lib/csv.ts`: parse `address,amount,memo` (headers optional, BOM-safe) (Medium)
@@ -44,5 +45,5 @@ phase ≈ one small commit. After each milestone, wait for user verification.
 ## Open questions to resolve during build
 - [ ] Does `useSendTransactionSync` accept `feeToken` alongside `calls`? (Phase 5)
 - [ ] Max N calls per `0x76` before gas-limit → chunk threshold? (Phase 5)
-- [ ] Exact ABI accessor: `Abis.TIP20` vs `Abis.tip20` in installed `viem/tempo`? (Phase 2/5)
-- [ ] Best balance read on Tempo: `viem/tempo` action vs plain ERC-20 `balanceOf`? (Phase 2)
+- [x] ABI accessor is `Abis.tip20` (lowercase) in installed `viem/tempo` — NOT `Abis.TIP20` (Phase 2)
+- [x] Balance read: standard ERC-20 `balanceOf` via wagmi `useReadContract` works for TIP-20 (Phase 2)

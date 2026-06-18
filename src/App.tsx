@@ -1,4 +1,6 @@
 import './App.css'
+import { ConnectButton } from './features/wallet/ConnectButton'
+import { WalletCard } from './features/wallet/WalletCard'
 
 const NETWORK = { name: 'Moderato', chainId: 42431 } as const
 
@@ -22,10 +24,7 @@ function App() {
           <span className="net-badge" title={`chainId ${NETWORK.chainId}`}>
             {NETWORK.name} · testnet
           </span>
-          {/* Phase 2: real Connect button wired to the Tempo Wallet connector. */}
-          <button className="btn btn--primary" disabled>
-            Подключить кошелёк
-          </button>
+          <ConnectButton />
         </div>
       </header>
 
@@ -34,9 +33,7 @@ function App() {
           <h2 id="s-wallet" className="card__title">
             1 · Кошелёк
           </h2>
-          <p className="muted">
-            Подключение Tempo Wallet и балансы стейблов — Фаза 2.
-          </p>
+          <WalletCard />
         </section>
 
         <section className="card" aria-labelledby="s-csv">

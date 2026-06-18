@@ -108,3 +108,106 @@
   color: var(--muted);
   font-size: 12px;
 }
+
+/* Wallet */
+.wallet {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.wallet__row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 12px;
+}
+
+.wallet__label {
+  flex: 0 0 64px;
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.wallet__value {
+  flex: 1 1 auto;
+  min-width: 0;
+  word-break: break-all;
+}
+
+.mono {
+  font-family: ui-monospace, 'Cascadia Code', Consolas, monospace;
+  font-size: 13px;
+}
+
+.balance {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.balance strong {
+  font-size: 18px;
+}
+
+.wallet-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 4px 6px 4px 12px;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  background: var(--panel-2);
+}
+
+.wallet-pill__addr {
+  font-family: ui-monospace, Consolas, monospace;
+  font-size: 13px;
+}
+
+.btn--ghost {
+  background: transparent;
+  border-color: var(--border);
+}
+
+.btn--sm {
+  padding: 3px 8px;
+  font-size: 12px;
+}
+
+.status {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.status--ok {
+  color: var(--ok);
+}
+
+.status--err {
+  color: var(--err);
+}
+
+.net-warn {
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  color: var(--warn);
+}
+
+.dot {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+}
+
+.dot--ok {
+  background: var(--ok);
+}
+
+.dot--warn {
+  background: var(--warn);
+}
