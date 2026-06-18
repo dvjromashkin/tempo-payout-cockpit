@@ -39,11 +39,13 @@ phase ≈ one small commit. After each milestone, wait for user verification.
 - [x] Unit tests for calls assembly (Medium)
 - [~] LIVE broadcast verification + gas-limit chunking — pending a working wallet (user, tomorrow)
 
-## Milestone 6 — Result + receipt + history (Phase 6)
-- [ ] Per-recipient result under tx hash; explorer links (Medium)
-- [ ] Downloadable CSV receipt (address, amount, memo, txHash) (Simple)
-- [ ] `src/lib/history.ts`: save runs to localStorage; list past runs (Medium)
-- [ ] Recipient directory (save/reuse) in localStorage (Medium)
+## Milestone 6 — Result + receipt + history (Phase 6) — built; live result pending wallet
+- [x] Per-recipient result in confirm dialog + history, under tx hash with explorer links (Medium)
+- [x] Downloadable CSV receipt (`buildReceiptCsv`, RFC4180 escaping) — 3 tests (Simple)
+- [x] `src/lib/history.ts`: save/load/clear runs in localStorage (cap 50, corruption-safe) — 5 tests (Medium)
+- [x] `HistoryCard` in card 4: past runs with re-downloadable receipts, clear history (Medium)
+- [ ] Recipient directory (save/reuse) — optional, not built this pass (Medium)
+- [~] Live result with a real tx hash — verified with a working wallet (user, tomorrow)
 
 ## Open questions to resolve during build
 - [x] `useSendTransactionSync` accepts `feeToken` alongside `calls` — type-checks (build passes); runtime pending wallet

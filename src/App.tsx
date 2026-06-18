@@ -1,11 +1,13 @@
 import { useState } from 'react'
 import './App.css'
+import { HistoryCard } from './features/history/HistoryCard'
 import { ImportCard } from './features/import/ImportCard'
 import { PreviewCard } from './features/preview/PreviewCard'
 import { ConfirmDialog } from './features/send/ConfirmDialog'
 import { ConnectButton } from './features/wallet/ConnectButton'
 import { WalletCard } from './features/wallet/WalletCard'
 import type { ParseResult } from './lib/csv'
+import { type RunRecord, clearRuns, loadRuns, saveRun } from './lib/history'
 
 const NETWORK = { name: 'Moderato', chainId: 42431 } as const
 
@@ -13,6 +15,7 @@ function App() {
   const [parse, setParse] = useState<ParseResult | null>(null)
   const [fileName, setFileName] = useState<string | null>(null)
   const [confirmOpen, setConfirmOpen] = useState(false)
+  const [runs, setRuns] = useState<RunRecord[]>(() => loadRuns(localStorage))
 
   return (
     <div className="app">
@@ -68,12 +71,15 @@ function App() {
 
         <section className="card" aria-labelledby="s-result">
           <h2 id="s-result" className="card__title">
-            4 · Подтверждение и результат
+            4 · История прогонов
           </h2>
-          <p className="muted">
-            Полная сводка → подпись в кошельке → квитанция и локальная история —
-            Фазы 5–6.
-          </p>
+          <HistoryCard
+            runs={runs}
+            onClear={() => {
+              clearRuns(localStorage)
+              setRuns([])
+            }}
+          />
         </section>
       </main>
 
@@ -87,7 +93,11 @@ function App() {
       </footer>
 
       {confirmOpen && parse && (
-        <ConfirmDialog result={parse} onClose={() => setConfirmOpen(false)} />
+        <ConfirmDialog
+          result={parse}
+          onClose={() => setConfirmOpen(false)}
+          onSuccess={(run) => setRuns(saveRun(localStorage, run))}
+        />
       )}
     </div>
   )

@@ -431,3 +431,54 @@ label.btn {
   justify-content: flex-end;
   gap: 10px;
 }
+
+/* History */
+.history {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.history__head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.history__list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.history__item {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 12px 14px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--panel-2);
+}
+
+.history__row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  font-size: 13px;
+}
+
+.history__hash {
+  font-size: 12px;
+  word-break: break-all;
+}
+
+.history__item .btn {
+  align-self: flex-start;
+}
