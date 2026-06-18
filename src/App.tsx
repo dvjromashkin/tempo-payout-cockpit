@@ -1,10 +1,16 @@
+import { useState } from 'react'
 import './App.css'
+import { ImportCard } from './features/import/ImportCard'
 import { ConnectButton } from './features/wallet/ConnectButton'
 import { WalletCard } from './features/wallet/WalletCard'
+import type { ParseResult } from './lib/csv'
 
 const NETWORK = { name: 'Moderato', chainId: 42431 } as const
 
 function App() {
+  const [parse, setParse] = useState<ParseResult | null>(null)
+  const [fileName, setFileName] = useState<string | null>(null)
+
   return (
     <div className="app">
       <header className="app__header">
@@ -40,9 +46,14 @@ function App() {
           <h2 id="s-csv" className="card__title">
             2 · Загрузка CSV
           </h2>
-          <p className="muted">
-            Колонки address, amount, memo с построчной валидацией — Фаза 3.
-          </p>
+          <ImportCard
+            result={parse}
+            fileName={fileName}
+            onResult={(r, n) => {
+              setParse(r)
+              setFileName(n)
+            }}
+          />
         </section>
 
         <section className="card" aria-labelledby="s-preview">

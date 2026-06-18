@@ -18,12 +18,13 @@ phase ≈ one small commit. After each milestone, wait for user verification.
 - [~] Done: connect on Moderato + balance visible — build + lint pass; on-chain connect to be
       verified by the user in a real browser (headless preview can't load the mkcert HTTPS dev)
 
-## Milestone 3 — CSV import + validation (Phase 3)
-- [ ] `src/lib/csv.ts`: parse `address,amount,memo` (headers optional, BOM-safe) (Medium)
-- [ ] Per-row validation: address, amount>0 & ≤6dp, memo ≤32 bytes, duplicates, Σ vs balance (Medium)
-- [ ] `src/lib/memo.ts`: string ↔ bytes32 helpers (Simple)
-- [ ] Import UI: file picker, per-row status table, clear errors; nothing executes (Medium)
-- [ ] Unit tests for csv + memo (Medium)
+## Milestone 3 — CSV import + validation (Phase 3) ✅
+- [x] `src/lib/csv.ts`: parse `address,amount,memo` (headers optional, BOM-safe, quoted fields) (Medium)
+- [x] Per-row validation: address (checksum), amount>0 & ≤6dp, memo ≤32 bytes, duplicates (warning) (Medium)
+- [x] `src/lib/memo.ts`: string ↔ bytes32 helpers (right-pad, verified by test) (Simple)
+- [x] Import UI: file picker, summary, per-row status table, clear errors; nothing executes (Medium)
+- [x] Unit tests for csv + memo — 15 tests, all green (Medium)
+- [~] Σ vs balance check moved to Phase 4 preview (needs the connected wallet balance)
 
 ## Milestone 4 — Batch preview (Phase 4)
 - [ ] Preview: recipient table, total, count, token, fee token (Medium)
