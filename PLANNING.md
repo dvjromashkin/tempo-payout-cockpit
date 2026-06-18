@@ -77,10 +77,11 @@ src/
 
 - **Gas-limit ceiling on N calls** → estimate; if over budget, chunk into multiple
   atomic `0x76` batches and warn the user (each batch stays all-or-nothing).
-- **`feeToken` + `calls` together** in `useSendTransactionSync` unverified → fallback:
-  `client.fee.setUserTokenSync` to set the default before sending.
-- **ABI accessor casing** (`Abis.TIP20` vs `Abis.tip20`) → verify against installed
-  `viem/tempo` before relying on it.
+- **`feeToken` + `calls` together** in `useSendTransactionSync` → type-confirmed (build passes;
+  `viem/_types/tempo/Transaction` carries both fields). Runtime confirmed with a live tx;
+  fallback if needed: `client.fee.setUserTokenSync` to set the default before sending.
+- **ABI accessor** is `Abis.tip20` (lowercase) — confirmed in the installed `viem/tempo`
+  (NOT `Abis.TIP20`); transfer/transferWithMemo decode round-trip verified by tests.
 - **Young SDK** (`accounts@0.14`) → versions pinned; re-verify the API reference below
   on any dependency bump.
 
@@ -166,7 +167,7 @@ Assemble N payouts and submit via the connected wallet (non-custodial):
 ```ts
 import { useSendTransactionSync } from 'wagmi'
 import { encodeFunctionData, parseUnits, stringToHex, pad } from 'viem'
-import { Abis } from 'viem/tempo'   // verify accessor: Abis.TIP20 (docs also show Abis.tip20)
+import { Abis } from 'viem/tempo'   // accessor is Abis.tip20 (lowercase) — confirmed in installed SDK
 
 const ALPHA_USD = '0x20c0000000000000000000000000000000000001'
 
@@ -174,19 +175,19 @@ const calls = rows.map((r) => ({
   to: ALPHA_USD,
   data: r.memo
     ? encodeFunctionData({
-        abi: Abis.TIP20,
+        abi: Abis.tip20,
         functionName: 'transferWithMemo',
         args: [r.address, parseUnits(r.amount, 6), pad(stringToHex(r.memo), { size: 32 })],
       })
     : encodeFunctionData({
-        abi: Abis.TIP20,
+        abi: Abis.tip20,
         functionName: 'transfer',
         args: [r.address, parseUnits(r.amount, 6)],
       }),
 }))
 
 const { sendTransactionSync, isPending } = useSendTransactionSync()
-sendTransactionSync({ calls /*, feeToken: ALPHA_USD — verify hook accepts it */ })
+sendTransactionSync({ calls, feeToken: ALPHA_USD })   // calls + feeToken both type-confirmed
 ```
 `*Sync` variants wait for inclusion and return a receipt; non-`Sync` returns a hash.
 One batch = **one tx hash**, all-or-nothing → "per-recipient result" = the rows settled
