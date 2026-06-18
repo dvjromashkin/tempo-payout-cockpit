@@ -54,6 +54,8 @@ phase ≈ one small commit. After each milestone, wait for user verification.
 - [x] Balance read: standard ERC-20 `balanceOf` via wagmi `useReadContract` works for TIP-20 (Phase 2)
 
 ## Backlog (post-MVP)
+- [ ] Enable `noUncheckedIndexedAccess` in tsconfig and fix surfaced array-index spots (review follow-up).
+- [ ] Component/integration test for the App-level send gate (proceed disabled on errors/insufficient).
 - [ ] Spreadsheet import: `.xlsx` + `.xls` + `.ods` (decided 2026-06-19 — after core payouts).
       Reuse the format-agnostic validator: extract `buildResult(records: string[][])` from csv.ts,
       add a sheet front-end `parseSheet(file) -> records`. Library: SheetJS (current version from

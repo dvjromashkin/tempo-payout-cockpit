@@ -57,6 +57,14 @@ describe('history store', () => {
     expect(loadRuns(store)).toEqual([])
   })
 
+  it('drops valid-JSON entries of the wrong shape', () => {
+    const store = fakeStore()
+    store.setItem('tempo-payout:runs:v1', JSON.stringify([1, 2, { id: 'x' }, run('5')]))
+    const runs = loadRuns(store)
+    expect(runs).toHaveLength(1)
+    expect(runs[0].id).toBe('5')
+  })
+
   it('clears the log', () => {
     const store = fakeStore()
     saveRun(store, run('1'))

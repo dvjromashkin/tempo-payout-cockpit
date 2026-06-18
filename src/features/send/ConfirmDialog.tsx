@@ -4,13 +4,12 @@ import { useAccount } from 'wagmi'
 import { ALPHA_USD } from '../../config/tokens'
 import { buildPayoutCalls } from '../../lib/calls'
 import type { ParseResult } from '../../lib/csv'
+import { txExplorerUrl } from '../../lib/explorer'
 import { groupDecimal, shortAddress } from '../../lib/format'
 import type { RunRecord } from '../../lib/history'
 import { buildReceiptCsv, downloadCsv } from '../../lib/receipt'
-import { txHashOf, useBatchPayout } from './useBatchPayout'
-
-// Path style for the Tempo testnet explorer — verify exact form with a real tx.
-const EXPLORER_TX = 'https://explore.testnet.tempo.xyz/tx/'
+import { txHashOf } from '../../lib/txhash'
+import { useBatchPayout } from './useBatchPayout'
 
 interface ConfirmDialogProps {
   result: ParseResult
@@ -71,6 +70,12 @@ export function ConfirmDialog({ result, onClose, onSuccess }: ConfirmDialogProps
   useEffect(() => {
     if (!isSuccess || savedRef.current) return
     savedRef.current = true
+    if (!hash) {
+      console.warn(
+        '[payout] transaction succeeded but no hash was found in the result; ' +
+          'receipt and explorer link will be empty. Verify txHashOf against the live result shape.',
+      )
+    }
     onSuccess({
       id: String(Date.now()),
       ts: Date.now(),
@@ -161,7 +166,7 @@ export function ConfirmDialog({ result, onClose, onSuccess }: ConfirmDialogProps
             {hash && (
               <p className="mono modal__hash">
                 tx:{' '}
-                <a href={`${EXPLORER_TX}${hash}`} target="_blank" rel="noreferrer">
+                <a href={txExplorerUrl(hash)} target="_blank" rel="noreferrer">
                   {hash}
                 </a>
               </p>

@@ -1,4 +1,3 @@
-import type { Hex } from 'viem'
 import { useSendTransactionSync } from 'wagmi'
 import { ALPHA_USD } from '../../config/tokens'
 import type { PayoutCall } from '../../lib/calls'
@@ -18,18 +17,4 @@ export function useBatchPayout() {
   }
 
   return { send, data, error, status, reset }
-}
-
-/** Best-effort tx-hash extraction across the documented Sync result shapes. */
-export function txHashOf(data: unknown): Hex | undefined {
-  if (!data || typeof data !== 'object') return undefined
-  const d = data as Record<string, unknown>
-  if (typeof d.hash === 'string') return d.hash as Hex
-  if (typeof d.transactionHash === 'string') return d.transactionHash as Hex
-  const receipt = d.receipt
-  if (receipt && typeof receipt === 'object') {
-    const rh = (receipt as Record<string, unknown>).transactionHash
-    if (typeof rh === 'string') return rh as Hex
-  }
-  return undefined
 }

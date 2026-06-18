@@ -38,6 +38,12 @@ describe('parseCsv', () => {
     expect(r.validCount).toBe(0)
   })
 
+  it('treats a bad-address first row as data, not a header', () => {
+    const r = parseCsv('0xBAD,100,memo')
+    expect(r.rows).toHaveLength(1)
+    expect(r.rows[0].errors.some((e) => e.includes('адрес'))).toBe(true)
+  })
+
   it('rejects bad amounts', () => {
     const r = parseCsv([`${A1},-1,`, `${A2},0,`, `${A1},1.1234567,`, `${A2},abc,`].join('\n'))
     expect(r.rows[0].errors.length).toBeGreaterThan(0) // negative -> bad format

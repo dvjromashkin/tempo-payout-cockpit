@@ -1,8 +1,7 @@
+import { txExplorerUrl } from '../../lib/explorer'
 import { groupDecimal } from '../../lib/format'
 import type { RunRecord } from '../../lib/history'
 import { buildReceiptCsv, downloadCsv } from '../../lib/receipt'
-
-const EXPLORER_TX = 'https://explore.testnet.tempo.xyz/tx/'
 
 interface HistoryCardProps {
   runs: RunRecord[]
@@ -42,7 +41,7 @@ export function HistoryCard({ runs, onClear }: HistoryCardProps) {
             </div>
             {run.txHash && (
               <div className="history__row mono history__hash">
-                <a href={`${EXPLORER_TX}${run.txHash}`} target="_blank" rel="noreferrer">
+                <a href={txExplorerUrl(run.txHash)} target="_blank" rel="noreferrer">
                   {run.txHash}
                 </a>
               </div>

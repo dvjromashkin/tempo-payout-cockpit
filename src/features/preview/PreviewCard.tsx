@@ -95,8 +95,8 @@ export function PreviewCard({ result, onProceed }: PreviewCardProps) {
 
       {result.errorCount > 0 && (
         <p className="status status--warn">
-          В файле есть строки с ошибками ({result.errorCount}). Исправьте файл —
-          пакет отправляется целиком и только из валидных строк.
+          В файле есть строки с ошибками ({result.errorCount}). Отправить пакет
+          можно только когда все строки валидны — исправьте файл.
         </p>
       )}
 

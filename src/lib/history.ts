@@ -28,12 +28,27 @@ export interface KVStore {
   removeItem(key: string): void
 }
 
+/** Minimal shape check so corrupt-but-valid-JSON entries can't break render. */
+function isRunRecord(value: unknown): value is RunRecord {
+  if (!value || typeof value !== 'object') return false
+  const r = value as Record<string, unknown>
+  return (
+    typeof r.id === 'string' &&
+    typeof r.ts === 'number' &&
+    typeof r.totalAmount === 'string' &&
+    typeof r.count === 'number' &&
+    (r.status === 'success' || r.status === 'error') &&
+    (r.txHash === null || typeof r.txHash === 'string') &&
+    Array.isArray(r.rows)
+  )
+}
+
 export function loadRuns(store: KVStore): RunRecord[] {
   const raw = store.getItem(STORAGE_KEY)
   if (!raw) return []
   try {
     const parsed: unknown = JSON.parse(raw)
-    return Array.isArray(parsed) ? (parsed as RunRecord[]) : []
+    return Array.isArray(parsed) ? parsed.filter(isRunRecord) : []
   } catch {
     return []
   }
