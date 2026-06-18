@@ -31,12 +31,13 @@ phase ≈ one small commit. After each milestone, wait for user verification.
 - [x] Proceed-gate: `computePackageGate` (pure) blocks on not-connected / wrong-network / errors / insufficient — 7 tests (Medium)
 - [~] Fee (gas) estimate moved to Phase 5 — needs the assembled 0x76 tx + connected wallet
 
-## Milestone 5 — Confirm → sign → broadcast (Phase 5)
-- [ ] `src/lib/calls.ts`: rows → `calls[]` (transfer / transferWithMemo) (Medium)
-- [ ] Confirmation screen with full package summary (Medium)
-- [ ] `useSendTransactionSync({ calls, feeToken })`; verify feeToken+calls; gas-limit chunking (Hard)
-- [ ] pending / success / error states (Medium)
-- [ ] Unit tests for calls assembly (Medium)
+## Milestone 5 — Confirm → sign → broadcast (Phase 5) — built; live send pending wallet
+- [x] `src/lib/calls.ts`: rows → `calls[]` (transfer / transferWithMemo via `Abis.tip20`) — 4 tests (Medium)
+- [x] Confirmation screen `ConfirmDialog` with full package summary (Medium)
+- [x] `useBatchPayout`: `useSendTransactionSync({ calls, feeToken })` — type-checks (feeToken+calls accepted) (Hard)
+- [x] pending / success / error states + tx hash + explorer link (built) (Medium)
+- [x] Unit tests for calls assembly (Medium)
+- [~] LIVE broadcast verification + gas-limit chunking — pending a working wallet (user, tomorrow)
 
 ## Milestone 6 — Result + receipt + history (Phase 6)
 - [ ] Per-recipient result under tx hash; explorer links (Medium)
@@ -45,8 +46,8 @@ phase ≈ one small commit. After each milestone, wait for user verification.
 - [ ] Recipient directory (save/reuse) in localStorage (Medium)
 
 ## Open questions to resolve during build
-- [ ] Does `useSendTransactionSync` accept `feeToken` alongside `calls`? (Phase 5)
-- [ ] Max N calls per `0x76` before gas-limit → chunk threshold? (Phase 5)
+- [x] `useSendTransactionSync` accepts `feeToken` alongside `calls` — type-checks (build passes); runtime pending wallet
+- [ ] Max N calls per `0x76` before gas-limit → chunk threshold? (needs live wallet; Phase 5 follow-up)
 - [x] ABI accessor is `Abis.tip20` (lowercase) in installed `viem/tempo` — NOT `Abis.TIP20` (Phase 2)
 - [x] Balance read: standard ERC-20 `balanceOf` via wagmi `useReadContract` works for TIP-20 (Phase 2)
 

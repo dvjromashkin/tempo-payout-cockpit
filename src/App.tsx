@@ -2,6 +2,7 @@ import { useState } from 'react'
 import './App.css'
 import { ImportCard } from './features/import/ImportCard'
 import { PreviewCard } from './features/preview/PreviewCard'
+import { ConfirmDialog } from './features/send/ConfirmDialog'
 import { ConnectButton } from './features/wallet/ConnectButton'
 import { WalletCard } from './features/wallet/WalletCard'
 import type { ParseResult } from './lib/csv'
@@ -11,6 +12,7 @@ const NETWORK = { name: 'Moderato', chainId: 42431 } as const
 function App() {
   const [parse, setParse] = useState<ParseResult | null>(null)
   const [fileName, setFileName] = useState<string | null>(null)
+  const [confirmOpen, setConfirmOpen] = useState(false)
 
   return (
     <div className="app">
@@ -61,7 +63,7 @@ function App() {
           <h2 id="s-preview" className="card__title">
             3 · Превью пакета
           </h2>
-          <PreviewCard result={parse} />
+          <PreviewCard result={parse} onProceed={() => setConfirmOpen(true)} />
         </section>
 
         <section className="card" aria-labelledby="s-result">
@@ -83,6 +85,10 @@ function App() {
           подтверждения.
         </p>
       </footer>
+
+      {confirmOpen && parse && (
+        <ConfirmDialog result={parse} onClose={() => setConfirmOpen(false)} />
+      )}
     </div>
   )
 }

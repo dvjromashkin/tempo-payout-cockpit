@@ -8,6 +8,7 @@ import { type GateReason, computePackageGate } from '../../lib/preview'
 
 interface PreviewCardProps {
   result: ParseResult | null
+  onProceed: () => void
 }
 
 /**
@@ -15,7 +16,7 @@ interface PreviewCardProps {
  * balance/error gate. The actual confirmation + broadcast is Phase 5; here the
  * "proceed" button only reflects whether the package is ready.
  */
-export function PreviewCard({ result }: PreviewCardProps) {
+export function PreviewCard({ result, onProceed }: PreviewCardProps) {
   const { address, status, chainId } = useAccount()
   const onModerato = chainId === tempoModerato.id
   const connected = status === 'connected' && Boolean(address)
@@ -135,6 +136,7 @@ export function PreviewCard({ result }: PreviewCardProps) {
           type="button"
           disabled={!canProceed}
           title={canProceed ? undefined : blockers.join('; ')}
+          onClick={onProceed}
         >
           Перейти к подтверждению
         </button>
