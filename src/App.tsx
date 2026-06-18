@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import './App.css'
 import { ImportCard } from './features/import/ImportCard'
+import { PreviewCard } from './features/preview/PreviewCard'
 import { ConnectButton } from './features/wallet/ConnectButton'
 import { WalletCard } from './features/wallet/WalletCard'
 import type { ParseResult } from './lib/csv'
@@ -60,9 +61,7 @@ function App() {
           <h2 id="s-preview" className="card__title">
             3 · Превью пакета
           </h2>
-          <p className="muted">
-            Получатели, итоги, число выплат, оценка комиссии, fee token — Фаза 4.
-          </p>
+          <PreviewCard result={parse} />
         </section>
 
         <section className="card" aria-labelledby="s-result">

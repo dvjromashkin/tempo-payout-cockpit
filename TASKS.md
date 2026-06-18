@@ -26,9 +26,10 @@ phase ≈ one small commit. After each milestone, wait for user verification.
 - [x] Unit tests for csv + memo — 15 tests, all green (Medium)
 - [~] Σ vs balance check moved to Phase 4 preview (needs the connected wallet balance)
 
-## Milestone 4 — Batch preview (Phase 4)
-- [ ] Preview: recipient table, total, count, token, fee token (Medium)
-- [ ] Fee estimate (gas in AlphaUSD); block proceed if any invalid rows (Medium)
+## Milestone 4 — Batch preview (Phase 4) ✅
+- [x] Preview: summary (token, count, total, fee token), recipient list, Σ-vs-balance check (Medium)
+- [x] Proceed-gate: `computePackageGate` (pure) blocks on not-connected / wrong-network / errors / insufficient — 7 tests (Medium)
+- [~] Fee (gas) estimate moved to Phase 5 — needs the assembled 0x76 tx + connected wallet
 
 ## Milestone 5 — Confirm → sign → broadcast (Phase 5)
 - [ ] `src/lib/calls.ts`: rows → `calls[]` (transfer / transferWithMemo) (Medium)
@@ -48,3 +49,12 @@ phase ≈ one small commit. After each milestone, wait for user verification.
 - [ ] Max N calls per `0x76` before gas-limit → chunk threshold? (Phase 5)
 - [x] ABI accessor is `Abis.tip20` (lowercase) in installed `viem/tempo` — NOT `Abis.TIP20` (Phase 2)
 - [x] Balance read: standard ERC-20 `balanceOf` via wagmi `useReadContract` works for TIP-20 (Phase 2)
+
+## Backlog (post-MVP)
+- [ ] Spreadsheet import: `.xlsx` + `.xls` + `.ods` (decided 2026-06-19 — after core payouts).
+      Reuse the format-agnostic validator: extract `buildResult(records: string[][])` from csv.ts,
+      add a sheet front-end `parseSheet(file) -> records`. Library: SheetJS (current version from
+      cdn.sheetjs.com — the npm `xlsx` is stale and has CVEs). Lazy-load via dynamic `import()` so
+      CSV users don't pay the bundle cost. Read RAW/text cell values (Excel coerces addresses to
+      scientific notation and strips leading zeros); per-row validation then flags bad cells.
+      First sheet by default.

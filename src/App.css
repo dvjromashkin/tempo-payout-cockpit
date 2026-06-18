@@ -334,3 +334,37 @@ label.btn {
   text-overflow: ellipsis;
   white-space: nowrap;
 }
+
+/* Preview */
+.preview {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.preview__note {
+  font-size: 13px;
+}
+
+.preview__list summary {
+  margin-bottom: 10px;
+  color: var(--muted);
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.preview__actions {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.blockers {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  font-size: 13px;
+}
