@@ -28,6 +28,8 @@ non-custodial UI for it. This fills that gap:
 
 ## How it works
 
+![Payout flow: CSV → validate → preview → confirm → one atomic 0x76 batch → receipt](docs/flow.svg)
+
 1. Connect the Tempo Wallet (passkey) on Moderato; see your AlphaUSD balance.
 2. Upload a CSV (`address, amount, memo`) — every row is validated and shown for review.
 3. Review the package preview (recipients, total, fee token) and the proceed gate.

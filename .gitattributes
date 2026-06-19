@@ -1,2 +1,12 @@
 # Normalize line endings to LF in the repo (avoids CRLF churn on Windows).
 * text=auto eol=lf
+
+# Images are binary — never normalize line endings.
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.webp binary
+
+# SVG is text but keep it from being mangled.
+*.svg text eol=lf
