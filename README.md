@@ -9,6 +9,31 @@ upload a CSV of recipients and pay all of them in **one atomic Tempo Transaction
 > Signing happens only in your wallet. Nothing from a CSV executes without an explicit
 > confirmation screen.
 
+## Status
+
+**MVP complete and verified live on Moderato.** A real 3-recipient payout went out as a
+single atomic `0x76` transaction (receipt status `0x1`, gas paid in AlphaUSD):
+[explore.testnet.tempo.xyz/tx/0x4bae…8fd9](https://explore.testnet.tempo.xyz/tx/0x4bae6aaa117d00dfb47b9c0cfedaf80650ae6931aa0873f413a92574d7dc8fd9).
+
+## Why this exists
+
+Tempo's batch primitive (the `0x76` `calls` vector) is exposed today only as a developer
+code recipe, an agent/MCP tool, or B2B orchestration — there is no **human-operated**,
+non-custodial UI for it. This fills that gap:
+
+- **Atomic** — all N transfers settle in one `0x76` transaction, or none do (no partial-payout reconciliation).
+- **Non-custodial, no backend** — signing happens in your wallet; the CSV, directory, and run history never leave the browser.
+- **Operationally safe** — per-row CSV validation (checksum, ≤6-decimal amounts, 32-byte memos, duplicates), a Σ-vs-balance gate, and an explicit confirmation screen before any broadcast.
+- **Auditable** — downloadable CSV receipt with the tx hash, plus a local run history.
+
+## How it works
+
+1. Connect the Tempo Wallet (passkey) on Moderato; see your AlphaUSD balance.
+2. Upload a CSV (`address, amount, memo`) — every row is validated and shown for review.
+3. Review the package preview (recipients, total, fee token) and the proceed gate.
+4. Confirm → sign one atomic `0x76` batch in your wallet.
+5. Download the receipt; the run is saved to a local history.
+
 ## Stack
 
 React 19 · Vite 8 · TypeScript 6 · wagmi 3 · viem 2 (`viem/tempo`, `wagmi/tempo`) ·
@@ -76,3 +101,19 @@ Each phase ships as a small commit; verify before moving on.
 Moderato testnet · chainId `42431` · RPC `https://rpc.moderato.tempo.xyz` ·
 explorer `https://explore.testnet.tempo.xyz`. See PLANNING.md for the full,
 source-verified API reference (tokens, batch tx format, memo encoding, fee token).
+
+## Known limitations (MVP scope)
+
+- **Testnet + AlphaUSD only**, single connector (**Tempo Wallet**). A generic injected EOA
+  cannot sign a `0x76` transaction, so it is intentionally not offered.
+- **Regional availability:** the hosted Tempo Wallet (`wallet.tempo.xyz`) is geo-restricted
+  in some regions (HTTP 451). The chain/RPC/faucet/explorer stay reachable; only the wallet
+  dialog is blocked. A region-independent connector (app-managed `webAuthn` passkeys) is the
+  planned fix — see [TASKS.md](TASKS.md).
+- **Batch size:** ~1,900 transfers fit one `0x76` on Moderato (block gas limit 500M, ~205k
+  gas/transfer); a chunking warning above ~1,000 is on the backlog.
+- Spreadsheet import (`.xlsx/.xls/.ods`) and a saved recipient directory are post-MVP (backlog).
+
+## License
+
+[MIT](LICENSE)
