@@ -48,6 +48,11 @@ phase ≈ one small commit. After each milestone, wait for user verification.
 - [~] Live result with a real tx hash — verified with a working wallet (user, tomorrow)
 
 ## Open questions to resolve during build
+- [!] BLOCKER (2026-06-19): Tempo Wallet host `wallet.tempo.xyz` is region-blocked (HTTP 451, incl. Ukraine) — the
+      hosted-wallet connect won't work in blocked regions. Chain RPC/faucet/explorer ARE reachable (Moderato chainId
+      42431 live, producing blocks). Mitigations: VPN (dev/testing), or a region-independent connector (`webAuthn`
+      app-managed passkeys — needs a small challenge endpoint) / another adapter (product). On-chain payout flow is
+      verifiable via a throwaway testnet key + viem, no wallet. Direction: TBD.
 - [x] `useSendTransactionSync` accepts `feeToken` alongside `calls` — type-checks (build passes); runtime pending wallet
 - [ ] Max N calls per `0x76` before gas-limit → chunk threshold? (needs live wallet; Phase 5 follow-up)
 - [x] ABI accessor is `Abis.tip20` (lowercase) in installed `viem/tempo` — NOT `Abis.TIP20` (Phase 2)
