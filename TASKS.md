@@ -31,30 +31,32 @@ phase ≈ one small commit. After each milestone, wait for user verification.
 - [x] Proceed-gate: `computePackageGate` (pure) blocks on not-connected / wrong-network / errors / insufficient — 7 tests (Medium)
 - [~] Fee (gas) estimate moved to Phase 5 — needs the assembled 0x76 tx + connected wallet
 
-## Milestone 5 — Confirm → sign → broadcast (Phase 5) — built; live send pending wallet
+## Milestone 5 — Confirm → sign → broadcast (Phase 5) ✅ (live-verified 2026-06-19)
 - [x] `src/lib/calls.ts`: rows → `calls[]` (transfer / transferWithMemo via `Abis.tip20`) — 4 tests (Medium)
 - [x] Confirmation screen `ConfirmDialog` with full package summary (Medium)
 - [x] `useBatchPayout`: `useSendTransactionSync({ calls, feeToken })` — type-checks (feeToken+calls accepted) (Hard)
 - [x] pending / success / error states + tx hash + explorer link (built) (Medium)
 - [x] Unit tests for calls assembly (Medium)
-- [~] LIVE broadcast verification + gas-limit chunking — pending a working wallet (user, tomorrow)
+- [x] LIVE broadcast verified — real `0x76` tx (receipt status 0x1), fee in AlphaUSD; hash 0x4bae…8fd9
+- [~] Gas-limit chunking: ~1,900 calls fit one `0x76` (block gasLimit 500M, ~205k gas/transfer) — add >~1,000 warn (backlog)
 
-## Milestone 6 — Result + receipt + history (Phase 6) — built; live result pending wallet
+## Milestone 6 — Result + receipt + history (Phase 6) ✅ (live-verified 2026-06-19)
 - [x] Per-recipient result in confirm dialog + history, under tx hash with explorer links (Medium)
 - [x] Downloadable CSV receipt (`buildReceiptCsv`, RFC4180 escaping) — 3 tests (Simple)
 - [x] `src/lib/history.ts`: save/load/clear runs in localStorage (cap 50, corruption-safe) — 5 tests (Medium)
 - [x] `HistoryCard` in card 4: past runs with re-downloadable receipts, clear history (Medium)
 - [ ] Recipient directory (save/reuse) — optional, not built this pass (Medium)
-- [~] Live result with a real tx hash — verified with a working wallet (user, tomorrow)
+- [x] Live result with a real tx hash — verified (success UI + explorer `/tx/` HTTP 200)
 
 ## Open questions to resolve during build
 - [!] BLOCKER (2026-06-19): Tempo Wallet host `wallet.tempo.xyz` is region-blocked (HTTP 451, incl. Ukraine) — the
       hosted-wallet connect won't work in blocked regions. Chain RPC/faucet/explorer ARE reachable (Moderato chainId
       42431 live, producing blocks). Mitigations: VPN (dev/testing), or a region-independent connector (`webAuthn`
       app-managed passkeys — needs a small challenge endpoint) / another adapter (product). On-chain payout flow is
-      verifiable via a throwaway testnet key + viem, no wallet. Direction: TBD.
+      verifiable via a throwaway testnet key + viem, no wallet. Update: dev unblocked via VPN — full payout
+      verified live (real 0x76, status 0x1). Region fix for production still TBD (webAuthn / officially supported region).
 - [x] `useSendTransactionSync` accepts `feeToken` alongside `calls` — type-checks (build passes); runtime pending wallet
-- [ ] Max N calls per `0x76` before gas-limit → chunk threshold? (needs live wallet; Phase 5 follow-up)
+- [x] Max N per `0x76` ≈ 1,900 (block gasLimit 500M, ~205k gas/transfer); warn/chunk above ~1,000 (backlog)
 - [x] ABI accessor is `Abis.tip20` (lowercase) in installed `viem/tempo` — NOT `Abis.TIP20` (Phase 2)
 - [x] Balance read: standard ERC-20 `balanceOf` via wagmi `useReadContract` works for TIP-20 (Phase 2)
 

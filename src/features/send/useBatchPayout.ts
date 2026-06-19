@@ -6,8 +6,8 @@ import type { PayoutCall } from '../../lib/calls'
  * Submit ONE atomic Tempo 0x76 transaction containing all payout calls, signed
  * by the connected wallet. Fee (gas) is paid in AlphaUSD (the payout token).
  *
- * NOTE: the live broadcast path is verified with a real wallet — until then the
- * shape `sendTransactionSync({ calls, feeToken })` is only type-checked.
+ * Verified live on Moderato: produces a real type-0x76 tx (receipt status 0x1);
+ * `calls` + `feeToken` are accepted together (gas paid in AlphaUSD).
  */
 export function useBatchPayout() {
   const { sendTransactionSync, data, error, status, reset } = useSendTransactionSync()

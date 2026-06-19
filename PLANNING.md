@@ -75,8 +75,8 @@ src/
 
 ## Risks and Mitigations
 
-- **Gas-limit ceiling on N calls** → estimate; if over budget, chunk into multiple
-  atomic `0x76` batches and warn the user (each batch stays all-or-nothing).
+- **Gas-limit ceiling on N calls** → measured on Moderato: block gasLimit 500M, ~205k gas/transfer,
+  so ~1,900 calls fit one `0x76`. Above ~1,000, warn / chunk into multiple atomic batches (each all-or-nothing).
 - **`feeToken` + `calls` together** in `useSendTransactionSync` → type-confirmed (build passes;
   `viem/_types/tempo/Transaction` carries both fields). Runtime confirmed with a live tx;
   fallback if needed: `client.fee.setUserTokenSync` to set the default before sending.

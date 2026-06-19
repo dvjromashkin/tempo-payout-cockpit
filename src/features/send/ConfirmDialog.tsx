@@ -70,9 +70,6 @@ export function ConfirmDialog({ result, onClose, onSuccess }: ConfirmDialogProps
   useEffect(() => {
     if (!isSuccess || savedRef.current) return
     savedRef.current = true
-    // Dev aid for the first live broadcast: capture the exact result shape so
-    // txHashOf can be confirmed/fixed. Remove once the shape is verified.
-    console.info('[payout] tx sync result:', payout.data, '| extracted hash:', hash)
     if (!hash) {
       console.warn(
         '[payout] transaction succeeded but no hash was found in the result; ' +
@@ -91,7 +88,7 @@ export function ConfirmDialog({ result, onClose, onSuccess }: ConfirmDialogProps
       status: 'success',
       rows: recipients.map((r) => ({ address: r.address, amount: r.amount, memo: r.memo })),
     })
-  }, [isSuccess, onSuccess, recipients, totalPlain, hash, payout.data])
+  }, [isSuccess, onSuccess, recipients, totalPlain, hash])
 
   function close() {
     if (isPending) return
