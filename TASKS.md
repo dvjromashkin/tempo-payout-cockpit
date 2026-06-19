@@ -3,6 +3,10 @@
 Status legend: `[x]` done · `[~]` in progress · `[ ]` todo. One milestone ≈ one
 phase ≈ one small commit. After each milestone, wait for user verification.
 
+> **Status: MVP COMPLETE — all 6 phases live-verified on Moderato (2026-06-19).**
+> End-to-end proven: CSV → one atomic `0x76` payout, signed in Tempo Wallet, receipt + local history.
+> Remaining items live under "Backlog (post-MVP)" — none block the core flow.
+
 ## Milestone 1 — Foundation ✅
 - [x] Scaffold Vite + React + TS (strict), rename project (Simple)
 - [x] HTTPS dev via `vite-plugin-mkcert`; verify dev server serves https (Simple)
