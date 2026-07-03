@@ -1,120 +1,171 @@
 # Tempo Payout Cockpit
 
-A **non-custodial** web dApp for mass stablecoin payouts on the **Tempo** blockchain:
-upload a CSV of recipients and pay all of them in **one atomic Tempo Transaction
-(type `0x76`)**, signed by your connected wallet. MVP targets the **Moderato testnet
-(chainId 42431)** with the **AlphaUSD** stablecoin.
+Live MVP: deployment pending
 
-> Non-custodial by design: private keys/seed are never requested, stored, or logged.
-> Signing happens only in your wallet. Nothing from a CSV executes without an explicit
-> confirmation screen.
+Tempo Payout Cockpit is an experimental, browser-only dApp for mass AlphaUSD
+payouts on the Tempo Moderato testnet. Upload a CSV, review every recipient and
+amount, then submit all valid payouts in one atomic Tempo transaction
+(type `0x76`) signed by Tempo Wallet.
 
-## Status
+This is an unofficial, independent community project. It is not affiliated with
+Tempo and is not suitable for real funds.
 
-**MVP complete and verified live on Moderato.** A real 3-recipient payout went out as a
-single atomic `0x76` transaction (receipt status `0x1`, gas paid in AlphaUSD):
-[explore.testnet.tempo.xyz/tx/0x4bae…8fd9](https://explore.testnet.tempo.xyz/tx/0x4bae6aaa117d00dfb47b9c0cfedaf80650ae6931aa0873f413a92574d7dc8fd9).
+## Public MVP Status
 
-## Why this exists
+- Network: Tempo Moderato testnet only, chainId `42431`.
+- Token: AlphaUSD only, 6 decimals.
+- Fee token: AlphaUSD.
+- Wallet: Tempo Wallet only.
+- Custody model: non-custodial, no backend, no private keys, no seed phrases.
+- Data model: CSV files stay in the browser; run history is stored in
+  `localStorage`.
+- Telemetry: no analytics, tracking, remote logging, or data collection.
 
-Tempo's batch primitive (the `0x76` `calls` vector) is exposed today only as a developer
-code recipe, an agent/MCP tool, or B2B orchestration — there is no **human-operated**,
-non-custodial UI for it. This fills that gap:
+## What It Does
 
-- **Atomic** — all N transfers settle in one `0x76` transaction, or none do (no partial-payout reconciliation).
-- **Non-custodial, no backend** — signing happens in your wallet; the CSV, directory, and run history never leave the browser.
-- **Operationally safe** — per-row CSV validation (checksum, ≤6-decimal amounts, 32-byte memos, duplicates), a Σ-vs-balance gate, and an explicit confirmation screen before any broadcast.
-- **Auditable** — downloadable CSV receipt with the tx hash, plus a local run history.
+1. Upload a CSV payout list.
+2. Review validation results, duplicates, memos, totals, and balance gates.
+3. Connect Tempo Wallet and confirm the full package summary.
+4. Sign and submit one atomic testnet transaction, then download a CSV receipt.
 
-## How it works
+If the atomic transaction fails, no recipients are paid.
 
-![Payout flow: CSV → validate → preview → confirm → one atomic 0x76 batch → receipt](docs/flow.svg)
+## Sample CSV
 
-1. Connect the Tempo Wallet (passkey) on Moderato; see your AlphaUSD balance.
-2. Upload a CSV (`address, amount, memo`) — every row is validated and shown for review.
-3. Review the package preview (recipients, total, fee token) and the proceed gate.
-4. Confirm → sign one atomic `0x76` batch in your wallet.
-5. Download the receipt; the run is saved to a local history.
+Download the included [sample-payout.csv](sample-payout.csv), or use this format:
 
-## Stack
+```csv
+address,amount,memo
+0x70997970C51812dc3A010C7d01b50e0d17dc79C8,1.5,INV-1001
+0x3C44CdDdB6a900fa2b585dd299e03d12FA4293BC,2,INV-1002
+0x90F79bf6EB2c4f870365E785982E1f101E93b906,0.25,
+```
 
-React 19 · Vite 8 · TypeScript 6 · wagmi 3 · viem 2 (`viem/tempo`, `wagmi/tempo`) ·
-Tempo Accounts SDK (`accounts`) · TanStack Query 5. No backend — recipient directory
-and run history live in `localStorage`.
+Validation includes address format, positive AlphaUSD amounts with at most six
+decimals, memo length up to 32 UTF-8 bytes, duplicate-address warnings, and total
+amount vs wallet balance.
 
-## Prerequisites
+## Local Development
 
-- Node.js **≥ 22.13** recommended (22.12 works but emits EBADENGINE warnings from eslint).
-- A Tempo Wallet. Fund a test account via the faucet:
-  ```bash
-  curl -X POST https://docs.tempo.xyz/api/faucet \
-    -H "Content-Type: application/json" -d '{"address": "<your_address_lowercase>"}'
-  ```
+Prerequisites:
 
-## Getting started
+- Node.js `>=22.13`.
+- Tempo Wallet access for runtime wallet testing.
+- Testnet AlphaUSD for live Moderato testing.
+
+Install and run:
 
 ```bash
-npm install      # .npmrc pins legacy-peer-deps (required — see note below)
-npm run dev      # HTTPS dev server at https://localhost:5173 (mkcert)
+npm install
+npm run dev
 ```
 
-First `npm run dev` is slow: `vite-plugin-mkcert` downloads its helper and installs a
-local CA to issue a trusted dev certificate. Subsequent runs are fast.
+`npm run dev` starts Vite over HTTPS using `vite-plugin-mkcert`, which is needed
+locally for passkey/wallet secure-context behavior. The first run may install a
+local development certificate.
 
-### Scripts
+Available scripts:
 
-| Script | Does |
-|---|---|
-| `npm run dev` | Vite dev server over HTTPS |
-| `npm run build` | `tsc -b` typecheck + production build |
-| `npm run lint` | ESLint |
-| `npm run preview` | Preview the production build |
-
-> **Why `.npmrc` sets `legacy-peer-deps=true`:** the `accounts` package declares
-> optional peer deps (Privy, Expo, React Native) that crash npm's default resolver
-> ("Cannot read properties of null (reading 'edgesOut')"). Legacy resolution avoids
-> the crash and does not pull in those unused peers.
-
-## Project structure
-
-```
-src/                 React app (see PLANNING.md for the target layout)
-CLAUDE.md            Project memory — auto-loaded by Claude Code each session
-PRD.md               Product requirements
-PLANNING.md          Architecture + the Verified Tempo API Reference (Phase 0)
-TASKS.md             Milestones / task status
-.claude/commands/    Slash commands: /new-task /resume /review /research
-.claude/agents/      Subagents: researcher, reviewer
+```bash
+npm run dev
+npm run lint
+npm run test
+npm run build
+npm run preview
 ```
 
-## Development workflow (Claude Code)
+`.npmrc` sets `legacy-peer-deps=true` because the `accounts` package declares
+optional peer dependencies that break npm's default resolver in this project.
 
-`CLAUDE.md` is auto-loaded at session start. Available commands:
+## Production Build
 
-- `/new-task <task from TASKS.md>` — start one bounded task under the project rules.
-- `/resume` — reconcile docs vs code and propose the next task in a fresh session.
-- `/review` — independent review of the current diff (no edits).
-- `/research <target>` — research a Tempo API and propose precise PLANNING.md updates.
+```bash
+npm run build
+npm run preview
+```
 
-Each phase ships as a small commit; verify before moving on.
+The production build is a static Vite site in `dist`. There is no serverless
+backend, database, or required runtime environment variable.
 
-## Network
+Build metadata displayed in the footer uses this priority:
 
-Moderato testnet · chainId `42431` · RPC `https://rpc.moderato.tempo.xyz` ·
-explorer `https://explore.testnet.tempo.xyz`. See PLANNING.md for the full,
-source-verified API reference (tokens, batch tx format, memo encoding, fee token).
+1. Vercel commit SHA (`VERCEL_GIT_COMMIT_SHA`) when Vercel provides it.
+2. `VITE_BUILD_ID` when set at build time.
+3. `package.json` version as a fallback.
 
-## Known limitations (MVP scope)
+## Vercel Deployment
 
-- **Testnet + AlphaUSD only**, single connector (**Tempo Wallet**). A generic injected EOA
-  cannot sign a `0x76` transaction, so it is intentionally not offered.
-- **Regional availability:** the hosted Tempo Wallet (`wallet.tempo.xyz`) is geo-restricted
-  in some regions (HTTP 451). The chain/RPC/faucet/explorer stay reachable; only the wallet
-  dialog is blocked. A region-independent connector (app-managed `webAuthn` passkeys) is the
-  planned fix — see [TASKS.md](TASKS.md).
-- **Batch size:** ~1,900 transfers fit one `0x76` on Moderato (block gas limit 500M, ~205k
-  gas/transfer); a chunking warning above ~1,000 is on the backlog.
-- Spreadsheet import (`.xlsx/.xls/.ods`) and a saved recipient directory are post-MVP (backlog).
+Use the standard Vite static deployment settings:
+
+- Framework preset: Vite
+- Root directory: repository root
+- Install command: `npm install`
+- Build command: `npm run build`
+- Output directory: `dist`
+- Required environment variables: none
+
+Do not add a backend, secrets, analytics, production/mainnet mode, or extra
+wallet providers for this MVP. A `vercel.json` file is not required because the
+app has no client-side routes that need a SPA fallback.
+
+## Network References
+
+- RPC: `https://rpc.moderato.tempo.xyz`
+- Explorer: `https://explore.testnet.tempo.xyz`
+- Tempo docs: `https://docs.tempo.xyz`
+- AlphaUSD: `0x20c0000000000000000000000000000000000001`
+
+The payout flow has previously been verified with a real three-recipient
+Moderato testnet transaction:
+[0x4bae...8fd9](https://explore.testnet.tempo.xyz/tx/0x4bae6aaa117d00dfb47b9c0cfedaf80650ae6931aa0873f413a92574d7dc8fd9).
+
+## Current Limitations
+
+- Experimental public testnet MVP only.
+- AlphaUSD only; no production/mainnet support.
+- Tempo Wallet only; generic injected EOA wallets are intentionally not offered
+  because they cannot sign Tempo `0x76` batch transactions.
+- Hosted Tempo Wallet availability may vary by region and can return HTTP 451.
+  The app does not attempt to bypass regional restrictions.
+- No backend, database, authentication, analytics, address book, spreadsheet
+  import, token swapping, fee sponsorship changes, or chunking for very large
+  batches.
+- Local history can be cleared by the browser or user.
+
+## Security Disclaimer
+
+This software is experimental and intended only for Tempo Moderato testnet use.
+Review every recipient, amount, and memo before signing. The app never asks for
+private keys or seed phrases; signing happens through Tempo Wallet. Uploaded CSV
+data remains local to the browser, but you are responsible for verifying the
+data before submitting the transaction.
+
+Do not use this MVP for real funds.
+
+## Project Structure
+
+```text
+src/main.tsx                     Providers and app bootstrap
+src/App.tsx                      Application shell and flow orchestration
+src/config/                      Tempo wallet and token constants
+src/features/                    Wallet, import, preview, send, history UI
+src/lib/                         Pure CSV, memo, calls, receipt, history helpers
+src/lib/__tests__/               Vitest unit tests
+PRD.md                           Product requirements
+PLANNING.md                      Architecture and verified Tempo API reference
+TASKS.md                         Milestones and backlog
+sample-payout.csv                Repository sample CSV
+public/sample-payout.csv         Static sample CSV download for Vite/Vercel
+```
+
+## Reporting Bugs
+
+Report bugs in the GitHub repository:
+<https://github.com/dvjromashkin/tempo-payout-cockpit/issues>
+
+Please include browser, region if relevant to wallet access, CSV shape, expected
+result, actual result, and any public testnet transaction hash. Do not include
+private keys, seed phrases, or sensitive recipient data.
 
 ## License
 
