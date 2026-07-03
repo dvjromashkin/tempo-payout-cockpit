@@ -50,7 +50,7 @@ phase ≈ one small commit. After each milestone, wait for user verification.
 - [x] `src/lib/history.ts`: save/load/clear runs in localStorage (cap 50, corruption-safe) — 5 tests (Medium)
 - [x] `HistoryCard` in card 4: past runs with re-downloadable receipts, clear history (Medium)
 - [ ] Recipient directory (save/reuse) — optional, not built this pass (Medium)
-- [x] Live result with a real tx hash — verified (success UI + explorer `/receipt/` route)
+- [x] Live result with a real tx hash — verified (success UI + explorer search fallback)
 
 ## Open questions to resolve during build
 - [!] BLOCKER (2026-06-19): Tempo Wallet host `wallet.tempo.xyz` is region-blocked (HTTP 451, incl. Ukraine) — the

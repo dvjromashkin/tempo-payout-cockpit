@@ -127,6 +127,10 @@ Moderato testnet transaction:
   because they cannot sign Tempo `0x76` batch transactions.
 - Hosted Tempo Wallet availability may vary by region and can return HTTP 451.
   The app does not attempt to bypass regional restrictions.
+- Official Explorer transaction deep links may intermittently show Not Found on
+  direct load or refresh. Copy the transaction hash and search from the Explorer
+  homepage if needed; on-chain confirmation and the downloaded local receipt are
+  independent of Explorer UI availability.
 - No backend, database, authentication, analytics, address book, spreadsheet
   import, token swapping, fee sponsorship changes, or chunking for very large
   batches.

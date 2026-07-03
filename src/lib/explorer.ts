@@ -1,10 +1,25 @@
-import { tempoModerato } from 'wagmi/chains'
+export const TEMPO_TESTNET_EXPLORER_URL = 'https://explore.testnet.tempo.xyz'
 
-/** Block-explorer base URL from the source-verified chain definition. */
-export const EXPLORER_BASE_URL =
-  tempoModerato.blockExplorers?.default.url ?? 'https://explore.testnet.tempo.xyz'
+/** Tempo testnet explorer homepage. Use this when deep links are unreliable. */
+export const EXPLORER_BASE_URL = TEMPO_TESTNET_EXPLORER_URL
+
+export function getTempoExplorerUrl(): string {
+  return TEMPO_TESTNET_EXPLORER_URL
+}
 
 /** Link to a transaction receipt on the Tempo Moderato explorer. */
 export function getTempoReceiptUrl(txHash: string): string {
-  return `${EXPLORER_BASE_URL.replace(/\/+$/, '')}/receipt/${txHash}`
+  return `${getTempoExplorerUrl()}/receipt/${txHash}`
+}
+
+export function getTempoExplorerAccess(txHash: string): {
+  explorerUrl: string
+  receiptUrl: string
+  txHash: string
+} {
+  return {
+    explorerUrl: getTempoExplorerUrl(),
+    receiptUrl: getTempoReceiptUrl(txHash),
+    txHash,
+  }
 }

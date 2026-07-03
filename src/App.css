@@ -548,6 +548,39 @@ label.btn {
   word-break: break-all;
 }
 
+.tx-access {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.tx-access__hash {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 8px;
+  font-size: 13px;
+}
+
+.tx-access__label {
+  color: var(--muted);
+}
+
+.tx-access__hash code {
+  font-family: ui-monospace, 'Cascadia Code', Consolas, monospace;
+}
+
+.tx-access__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.tx-access__note,
+.tx-access__feedback {
+  font-size: 12px;
+}
+
 .modal__actions {
   display: flex;
   justify-content: flex-end;

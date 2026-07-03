@@ -1,9 +1,8 @@
 import { useState } from 'react'
+import { TransactionExplorerActions } from '../shared/TransactionExplorerActions'
 import { formatReceiptDownloadError } from '../../lib/errors'
-import { getTempoReceiptUrl } from '../../lib/explorer'
 import { groupDecimal } from '../../lib/format'
 import type { RunRecord } from '../../lib/history'
-import { safeExternalLinkProps } from '../../lib/publicLinks'
 import { buildReceiptCsv, downloadCsv } from '../../lib/receipt'
 
 interface HistoryCardProps {
@@ -61,18 +60,7 @@ export function HistoryCard({ runs, onClear }: HistoryCardProps) {
             <div className="history__row muted">
               {run.count} payouts - {groupDecimal(run.totalAmount)} {run.tokenSymbol}
             </div>
-            {run.txHash && (
-              <div className="history__row mono history__hash">
-                <a
-                  href={getTempoReceiptUrl(run.txHash)}
-                  {...safeExternalLinkProps(
-                    'Open transaction receipt in Tempo Moderato explorer',
-                  )}
-                >
-                  {run.txHash}
-                </a>
-              </div>
-            )}
+            {run.txHash && <TransactionExplorerActions txHash={run.txHash} />}
             <button
               className="btn btn--ghost btn--sm"
               type="button"

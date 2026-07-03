@@ -2,13 +2,12 @@ import { useEffect, useMemo, useRef, useState } from 'react'
 import { type Address, formatUnits } from 'viem'
 import { useAccount } from 'wagmi'
 import { ALPHA_USD } from '../../config/tokens'
+import { TransactionExplorerActions } from '../shared/TransactionExplorerActions'
 import { buildPayoutCalls } from '../../lib/calls'
 import type { ParseResult } from '../../lib/csv'
 import { formatPayoutError, formatReceiptDownloadError } from '../../lib/errors'
-import { getTempoReceiptUrl } from '../../lib/explorer'
 import { groupDecimal, shortAddress } from '../../lib/format'
 import type { RunRecord } from '../../lib/history'
-import { safeExternalLinkProps } from '../../lib/publicLinks'
 import { buildReceiptCsv, downloadCsv } from '../../lib/receipt'
 import { txHashOf } from '../../lib/txhash'
 import { useBatchPayout } from './useBatchPayout'
@@ -173,19 +172,7 @@ export function ConfirmDialog({ result, onClose, onSuccess }: ConfirmDialogProps
             <p className="status status--ok">
               Done - the Atomic batch was sent in one transaction.
             </p>
-            {hash && (
-              <p className="mono modal__hash">
-                tx:{' '}
-                <a
-                  href={getTempoReceiptUrl(hash)}
-                  {...safeExternalLinkProps(
-                    'Open transaction receipt in Tempo Moderato explorer',
-                  )}
-                >
-                  {hash}
-                </a>
-              </p>
-            )}
+            {hash && <TransactionExplorerActions txHash={hash} />}
             {receiptError && (
               <p className="status status--err modal__msg" role="alert">
                 {receiptError}
