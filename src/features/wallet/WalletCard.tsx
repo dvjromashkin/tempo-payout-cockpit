@@ -2,6 +2,7 @@ import { erc20Abi, formatUnits } from 'viem'
 import { useAccount, useReadContract, useSwitchChain } from 'wagmi'
 import { tempoModerato } from 'wagmi/chains'
 import { ALPHA_USD } from '../../config/tokens'
+import { formatReadError } from '../../lib/errors'
 import { groupDecimal } from '../../lib/format'
 
 /**
@@ -31,10 +32,13 @@ export function WalletCard() {
 
   if (status !== 'connected' || !address) {
     return (
-      <p className="muted">
-        Подключите Tempo Wallet (кнопка вверху), чтобы увидеть адрес и баланс
-        AlphaUSD.
-      </p>
+      <>
+        <p className="muted">
+          Подключите Tempo Wallet (кнопка вверху), чтобы увидеть адрес и баланс
+          AlphaUSD.
+        </p>
+        <p className="muted">Tempo Wallet availability may vary by region.</p>
+      </>
     )
   }
 
@@ -77,7 +81,7 @@ export function WalletCard() {
         <span className="wallet__value">
           {balanceError ? (
             <span className="status status--err">
-              Ошибка чтения баланса: {balanceError.message}
+              {formatReadError(balanceError)}
             </span>
           ) : balanceLoading ? (
             <span className="muted">загрузка…</span>

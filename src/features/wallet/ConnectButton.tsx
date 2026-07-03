@@ -1,5 +1,6 @@
 import { useAccount, useConnect, useConnectors, useDisconnect } from 'wagmi'
 import { tempoModerato } from 'wagmi/chains'
+import { formatWalletError } from '../../lib/errors'
 import { shortAddress } from '../../lib/format'
 
 /**
@@ -9,7 +10,7 @@ import { shortAddress } from '../../lib/format'
  */
 export function ConnectButton() {
   const { address, status } = useAccount()
-  const { connect } = useConnect()
+  const { connect, error } = useConnect()
   const connectors = useConnectors()
   const { disconnect } = useDisconnect()
 
@@ -30,13 +31,22 @@ export function ConnectButton() {
   const busy = status === 'connecting' || status === 'reconnecting'
 
   return (
-    <button
-      className="btn btn--primary"
-      type="button"
-      disabled={!connector || busy}
-      onClick={() => connector && connect({ connector, chainId: tempoModerato.id })}
-    >
-      {busy ? 'Подключение…' : 'Подключить кошелёк'}
-    </button>
+    <div className="connect-stack">
+      <button
+        className="btn btn--primary"
+        type="button"
+        disabled={!connector || busy}
+        onClick={() => connector && connect({ connector, chainId: tempoModerato.id })}
+      >
+        {busy ? 'Подключение…' : 'Подключить кошелёк'}
+      </button>
+      {error ? (
+        <p className="status status--err connect-note" role="alert">
+          {formatWalletError(error)}
+        </p>
+      ) : (
+        <p className="muted connect-note">Tempo Wallet availability may vary by region.</p>
+      )}
+    </div>
   )
 }

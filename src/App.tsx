@@ -6,8 +6,11 @@ import { PreviewCard } from './features/preview/PreviewCard'
 import { ConfirmDialog } from './features/send/ConfirmDialog'
 import { ConnectButton } from './features/wallet/ConnectButton'
 import { WalletCard } from './features/wallet/WalletCard'
+import { BUILD_LABEL } from './lib/buildInfo'
 import type { ParseResult } from './lib/csv'
 import { type RunRecord, clearRuns, loadRuns, saveRun } from './lib/history'
+import { PUBLIC_LINKS, safeExternalLinkProps } from './lib/publicLinks'
+import { HOW_IT_WORKS_STEPS, PUBLIC_STATUS, SAFETY_NOTICE } from './lib/publicMvp'
 
 const NETWORK = { name: 'Moderato', chainId: 42431 } as const
 
@@ -26,6 +29,14 @@ function App() {
           </span>
           <div>
             <h1 className="brand__title">Tempo Payout Cockpit</h1>
+            <div
+              className="testnet-status"
+              role="status"
+              aria-label={PUBLIC_STATUS.ariaLabel}
+            >
+              <strong>{PUBLIC_STATUS.label}</strong>
+              <span>{PUBLIC_STATUS.supporting}</span>
+            </div>
             <p className="brand__subtitle">
               Массовые стейблкоин-выплаты одним атомарным пакетом
             </p>
@@ -39,6 +50,27 @@ function App() {
           <ConnectButton />
         </div>
       </header>
+
+      <section className="notice" aria-labelledby="notice-title">
+        <div>
+          <h2 id="notice-title">{SAFETY_NOTICE.title}</h2>
+          <p>{SAFETY_NOTICE.lead}</p>
+        </div>
+        <ul>
+          {SAFETY_NOTICE.points.map((point) => (
+            <li key={point}>{point}</li>
+          ))}
+        </ul>
+      </section>
+
+      <section className="how-it-works" aria-labelledby="how-title">
+        <h2 id="how-title">How it works</h2>
+        <ol>
+          {HOW_IT_WORKS_STEPS.map((step) => (
+            <li key={step}>{step}</li>
+          ))}
+        </ol>
+      </section>
 
       <main className="app__main">
         <section className="card" aria-labelledby="s-wallet">
@@ -84,12 +116,35 @@ function App() {
       </main>
 
       <footer className="app__footer">
-        <p>
-          Non-custodial. Приватные ключи и seed не запрашиваются, не хранятся и
-          не логируются. Подпись транзакций — только в вашем кошельке.
-          Содержимое CSV — это данные: исполняется лишь после вашего явного
-          подтверждения.
-        </p>
+        <div>
+          <p>
+            Unofficial, independent community project. Not affiliated with Tempo.
+          </p>
+          <p>
+            Non-custodial browser-only MVP for Moderato testnet AlphaUSD. Not suitable
+            for real funds.
+          </p>
+        </div>
+        <nav className="footer-links" aria-label="Public resources">
+          <a href={PUBLIC_LINKS.github} {...safeExternalLinkProps('Open GitHub repository')}>
+            GitHub
+          </a>
+          <a href={PUBLIC_LINKS.sampleCsv} download aria-label="Download sample CSV">
+            Sample CSV
+          </a>
+          <a
+            href={PUBLIC_LINKS.explorer}
+            {...safeExternalLinkProps('Open Tempo Moderato explorer')}
+          >
+            Moderato explorer
+          </a>
+          <a href={PUBLIC_LINKS.docs} {...safeExternalLinkProps('Open Tempo documentation')}>
+            Tempo docs
+          </a>
+        </nav>
+        <span className="build-label" aria-label={BUILD_LABEL}>
+          {BUILD_LABEL}
+        </span>
       </footer>
 
       {confirmOpen && parse && (

@@ -1,12 +1,14 @@
-import { useEffect, useMemo, useRef } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { type Address, formatUnits } from 'viem'
 import { useAccount } from 'wagmi'
 import { ALPHA_USD } from '../../config/tokens'
 import { buildPayoutCalls } from '../../lib/calls'
 import type { ParseResult } from '../../lib/csv'
+import { formatPayoutError, formatReceiptDownloadError } from '../../lib/errors'
 import { txExplorerUrl } from '../../lib/explorer'
 import { groupDecimal, shortAddress } from '../../lib/format'
 import type { RunRecord } from '../../lib/history'
+import { safeExternalLinkProps } from '../../lib/publicLinks'
 import { buildReceiptCsv, downloadCsv } from '../../lib/receipt'
 import { txHashOf } from '../../lib/txhash'
 import { useBatchPayout } from './useBatchPayout'
@@ -33,6 +35,7 @@ export function ConfirmDialog({ result, onClose, onSuccess }: ConfirmDialogProps
   const { status: acctStatus } = useAccount()
   const payout = useBatchPayout()
   const savedRef = useRef(false)
+  const [receiptError, setReceiptError] = useState<string | null>(null)
 
   const recipients = useMemo<Recipient[]>(() => {
     const list: Recipient[] = []
@@ -97,11 +100,16 @@ export function ConfirmDialog({ result, onClose, onSuccess }: ConfirmDialogProps
   }
 
   function downloadReceipt() {
-    const csv = buildReceiptCsv(
-      recipients.map((r) => ({ address: r.address, amount: r.amount, memo: r.memo })),
-      { token: ALPHA_USD.symbol, txHash: hash ?? null },
-    )
-    downloadCsv(`payout-${hash ?? 'receipt'}.csv`, csv)
+    setReceiptError(null)
+    try {
+      const csv = buildReceiptCsv(
+        recipients.map((r) => ({ address: r.address, amount: r.amount, memo: r.memo })),
+        { token: ALPHA_USD.symbol, txHash: hash ?? null },
+      )
+      downloadCsv(`payout-${hash ?? 'receipt'}.csv`, csv)
+    } catch (error) {
+      setReceiptError(formatReceiptDownloadError(error))
+    }
   }
 
   return (
@@ -156,7 +164,7 @@ export function ConfirmDialog({ result, onClose, onSuccess }: ConfirmDialogProps
 
         {isError && (
           <p className="status status--err modal__msg">
-            Ошибка: {payout.error?.message ?? 'не удалось отправить транзакцию'}
+            {formatPayoutError(payout.error)}
           </p>
         )}
 
@@ -166,9 +174,17 @@ export function ConfirmDialog({ result, onClose, onSuccess }: ConfirmDialogProps
             {hash && (
               <p className="mono modal__hash">
                 tx:{' '}
-                <a href={txExplorerUrl(hash)} target="_blank" rel="noreferrer">
+                <a
+                  href={txExplorerUrl(hash)}
+                  {...safeExternalLinkProps('Open transaction in Tempo Moderato explorer')}
+                >
                   {hash}
                 </a>
+              </p>
+            )}
+            {receiptError && (
+              <p className="status status--err modal__msg" role="alert">
+                {receiptError}
               </p>
             )}
             <button className="btn btn--ghost" type="button" onClick={downloadReceipt}>
