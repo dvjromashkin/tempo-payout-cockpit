@@ -31,7 +31,7 @@ const HEADER_TOKENS = new Set(['address', 'addr', 'wallet', 'recipient', 'to'])
 function looksLikeHeader(fields: string[]): boolean {
   const first = (fields[0] ?? '').toLowerCase()
   if (HEADER_TOKENS.has(first)) return true
-  return !isAddress(fields[0] ?? '') && /amount|value|sum|сумма/i.test(fields[1] ?? '')
+  return !isAddress(fields[0] ?? '') && /amount|value|sum/i.test(fields[1] ?? '')
 }
 
 /** Split a single CSV line into trimmed fields, honoring double-quoted fields. */
@@ -71,21 +71,21 @@ function parseAmount(raw: string): {
   error?: string
 } {
   const s = raw.trim()
-  if (!s) return { amount: null, amountRaw: null, error: 'пустая сумма' }
+  if (!s) return { amount: null, amountRaw: null, error: 'empty amount' }
   if (!/^\d+(\.\d+)?$/.test(s)) {
-    return { amount: null, amountRaw: null, error: 'сумма: только цифры и точка' }
+    return { amount: null, amountRaw: null, error: 'amount: digits and decimal point only' }
   }
   const frac = s.split('.')[1] ?? ''
   if (frac.length > TOKEN_DECIMALS) {
     return {
       amount: null,
       amountRaw: null,
-      error: `сумма: максимум ${TOKEN_DECIMALS} знаков после точки`,
+      error: `amount: maximum ${TOKEN_DECIMALS} decimal places`,
     }
   }
   const amountRaw = parseUnits(s, TOKEN_DECIMALS)
   if (amountRaw <= 0n) {
-    return { amount: null, amountRaw: null, error: 'сумма должна быть больше 0' }
+    return { amount: null, amountRaw: null, error: 'amount must be greater than 0' }
   }
   return { amount: s, amountRaw }
 }
@@ -95,10 +95,10 @@ function validateRow(line: number, fields: string[]): ParsedRow {
   const warnings: string[] = []
 
   if (fields.length < 2) {
-    errors.push('ожидаются колонки: address, amount[, memo]')
+    errors.push('expected columns: address, amount[, memo]')
   }
   if (fields.length > 3) {
-    errors.push('слишком много колонок (запятая в memo? возьмите значение в кавычки)')
+    errors.push('too many columns (comma in memo? wrap the value in quotes)')
   }
 
   const rawAddress = fields[0] ?? ''
@@ -107,9 +107,9 @@ function validateRow(line: number, fields: string[]): ParsedRow {
 
   let address: Address | null = null
   if (!rawAddress) {
-    errors.push('пустой адрес')
+    errors.push('empty address')
   } else if (!isAddress(rawAddress)) {
-    errors.push('невалидный адрес')
+    errors.push('invalid address')
   } else {
     address = getAddress(rawAddress)
   }
@@ -118,7 +118,7 @@ function validateRow(line: number, fields: string[]): ParsedRow {
   if (amountError) errors.push(amountError)
 
   if (memo && memoByteLength(memo) > MEMO_MAX_BYTES) {
-    errors.push(`memo > ${MEMO_MAX_BYTES} байт (сейчас ${memoByteLength(memo)})`)
+    errors.push(`memo > ${MEMO_MAX_BYTES} bytes (currently ${memoByteLength(memo)})`)
   }
 
   return { line, address, amount, amountRaw, memo, errors, warnings }
@@ -150,7 +150,7 @@ export function parseCsv(text: string): ParseResult {
   let duplicateCount = 0
   for (const r of rows) {
     if (r.address && (counts.get(r.address) ?? 0) > 1) {
-      r.warnings.push('дубликат адреса в файле')
+      r.warnings.push('duplicate address in file')
       duplicateCount++
     }
   }
@@ -159,7 +159,7 @@ export function parseCsv(text: string): ParseResult {
   const totalRaw = validRows.reduce((sum, r) => sum + (r.amountRaw ?? 0n), 0n)
 
   const fileErrors: string[] = []
-  if (rows.length === 0) fileErrors.push('Нет строк выплат в файле')
+  if (rows.length === 0) fileErrors.push('No payout rows in the file')
 
   return {
     rows,
