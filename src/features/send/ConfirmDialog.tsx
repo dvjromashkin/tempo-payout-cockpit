@@ -5,7 +5,7 @@ import { ALPHA_USD } from '../../config/tokens'
 import { buildPayoutCalls } from '../../lib/calls'
 import type { ParseResult } from '../../lib/csv'
 import { formatPayoutError, formatReceiptDownloadError } from '../../lib/errors'
-import { txExplorerUrl } from '../../lib/explorer'
+import { getTempoReceiptUrl } from '../../lib/explorer'
 import { groupDecimal, shortAddress } from '../../lib/format'
 import type { RunRecord } from '../../lib/history'
 import { safeExternalLinkProps } from '../../lib/publicLinks'
@@ -177,8 +177,10 @@ export function ConfirmDialog({ result, onClose, onSuccess }: ConfirmDialogProps
               <p className="mono modal__hash">
                 tx:{' '}
                 <a
-                  href={txExplorerUrl(hash)}
-                  {...safeExternalLinkProps('Open transaction in Tempo Moderato explorer')}
+                  href={getTempoReceiptUrl(hash)}
+                  {...safeExternalLinkProps(
+                    'Open transaction receipt in Tempo Moderato explorer',
+                  )}
                 >
                   {hash}
                 </a>

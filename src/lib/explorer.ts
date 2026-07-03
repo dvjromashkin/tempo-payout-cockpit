@@ -4,7 +4,7 @@ import { tempoModerato } from 'wagmi/chains'
 export const EXPLORER_BASE_URL =
   tempoModerato.blockExplorers?.default.url ?? 'https://explore.testnet.tempo.xyz'
 
-/** Link to a transaction on the Tempo Moderato explorer. */
-export function txExplorerUrl(hash: string): string {
-  return `${EXPLORER_BASE_URL}/tx/${hash}`
+/** Link to a transaction receipt on the Tempo Moderato explorer. */
+export function getTempoReceiptUrl(txHash: string): string {
+  return `${EXPLORER_BASE_URL.replace(/\/+$/, '')}/receipt/${txHash}`
 }

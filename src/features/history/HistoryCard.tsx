@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { formatReceiptDownloadError } from '../../lib/errors'
-import { txExplorerUrl } from '../../lib/explorer'
+import { getTempoReceiptUrl } from '../../lib/explorer'
 import { groupDecimal } from '../../lib/format'
 import type { RunRecord } from '../../lib/history'
 import { safeExternalLinkProps } from '../../lib/publicLinks'
@@ -64,8 +64,10 @@ export function HistoryCard({ runs, onClear }: HistoryCardProps) {
             {run.txHash && (
               <div className="history__row mono history__hash">
                 <a
-                  href={txExplorerUrl(run.txHash)}
-                  {...safeExternalLinkProps('Open transaction in Tempo Moderato explorer')}
+                  href={getTempoReceiptUrl(run.txHash)}
+                  {...safeExternalLinkProps(
+                    'Open transaction receipt in Tempo Moderato explorer',
+                  )}
                 >
                   {run.txHash}
                 </a>

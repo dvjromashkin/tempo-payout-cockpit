@@ -117,7 +117,7 @@ app has no client-side routes that need a SPA fallback.
 
 The payout flow has previously been verified with a real three-recipient
 Moderato testnet transaction:
-[0x4bae...8fd9](https://explore.testnet.tempo.xyz/tx/0x4bae6aaa117d00dfb47b9c0cfedaf80650ae6931aa0873f413a92574d7dc8fd9).
+[0x4bae...8fd9](https://explore.testnet.tempo.xyz/receipt/0x4bae6aaa117d00dfb47b9c0cfedaf80650ae6931aa0873f413a92574d7dc8fd9).
 
 ## Current Limitations
 
