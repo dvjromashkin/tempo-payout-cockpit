@@ -25,7 +25,7 @@ function App() {
       <header className="app__header">
         <div className="brand">
           <span className="brand__mark" aria-hidden="true">
-            ◇
+            &#9671;
           </span>
           <div>
             <h1 className="brand__title">Tempo Payout Cockpit</h1>
@@ -38,14 +38,14 @@ function App() {
               <span>{PUBLIC_STATUS.supporting}</span>
             </div>
             <p className="brand__subtitle">
-              Массовые стейблкоин-выплаты одним атомарным пакетом
+              Mass stablecoin payouts in one Atomic batch.
             </p>
           </div>
         </div>
 
         <div className="header__right">
           <span className="net-badge" title={`chainId ${NETWORK.chainId}`}>
-            {NETWORK.name} · testnet
+            {NETWORK.name} testnet
           </span>
           <ConnectButton />
         </div>
@@ -75,14 +75,14 @@ function App() {
       <main className="app__main">
         <section className="card" aria-labelledby="s-wallet">
           <h2 id="s-wallet" className="card__title">
-            1 · Кошелёк
+            1. Wallet
           </h2>
           <WalletCard />
         </section>
 
         <section className="card" aria-labelledby="s-csv">
           <h2 id="s-csv" className="card__title">
-            2 · Загрузка CSV
+            2. Upload CSV
           </h2>
           <ImportCard
             result={parse}
@@ -96,14 +96,14 @@ function App() {
 
         <section className="card" aria-labelledby="s-preview">
           <h2 id="s-preview" className="card__title">
-            3 · Превью пакета
+            3. Package preview
           </h2>
           <PreviewCard result={parse} onProceed={() => setConfirmOpen(true)} />
         </section>
 
         <section className="card" aria-labelledby="s-result">
           <h2 id="s-result" className="card__title">
-            4 · История прогонов
+            4. Run history
           </h2>
           <HistoryCard
             runs={runs}

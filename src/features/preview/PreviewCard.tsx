@@ -33,8 +33,7 @@ export function PreviewCard({ result, onProceed }: PreviewCardProps) {
   if (!result || result.validCount === 0) {
     return (
       <p className="muted">
-        Загрузите CSV с валидными строками (карточка выше), чтобы увидеть превью
-        пакета.
+        Upload CSV with valid rows above to see the Package preview.
       </p>
     )
   }
@@ -60,15 +59,15 @@ export function PreviewCard({ result, onProceed }: PreviewCardProps) {
     <div className="preview">
       <div className="summary">
         <div className="stat">
-          <span className="stat__label">Токен</span>
+          <span className="stat__label">Token</span>
           <span className="stat__value">{ALPHA_USD.symbol}</span>
         </div>
         <div className="stat">
-          <span className="stat__label">Выплат</span>
+          <span className="stat__label">Payouts</span>
           <span className="stat__value">{result.validCount}</span>
         </div>
         <div className="stat">
-          <span className="stat__label">Итого</span>
+          <span className="stat__label">Total</span>
           <span className="stat__value">{totalStr}</span>
         </div>
         <div className="stat">
@@ -76,39 +75,39 @@ export function PreviewCard({ result, onProceed }: PreviewCardProps) {
           <span className="stat__value">{ALPHA_USD.symbol}</span>
         </div>
         <div className="stat">
-          <span className="stat__label">Баланс</span>
+          <span className="stat__label">Balance</span>
           <span
             className={`stat__value${
               insufficient ? ' stat__value--err' : connected ? ' stat__value--ok' : ''
             }`}
           >
-            {balanceStr ?? '—'}
+            {balanceStr ?? '-'}
           </span>
         </div>
       </div>
 
       <p className="muted preview__note">
-        Газ оплачивается в {ALPHA_USD.symbol} (тем же токеном); точная оценка
-        комиссии — на экране подписи (Фаза 5). Атомарно: все {result.validCount}{' '}
-        выплат пройдут одной транзакцией, либо не пройдёт ни одна.
+        Gas is paid in {ALPHA_USD.symbol} with the same token; the wallet shows
+        the final fee estimate before signing. Atomic batch: all {result.validCount}{' '}
+        payouts go through in one transaction, or none do.
       </p>
 
       {result.errorCount > 0 && (
         <p className="status status--warn">
-          В файле есть строки с ошибками ({result.errorCount}). Отправить пакет
-          можно только когда все строки валидны — исправьте файл.
+          The file has rows with errors ({result.errorCount}). The Atomic batch can
+          be sent only after all rows are valid.
         </p>
       )}
 
       <details className="preview__list">
-        <summary>Показать получателей ({result.validCount})</summary>
+        <summary>Show recipients ({result.validCount})</summary>
         <div className="table-wrap">
           <table className="table">
             <thead>
               <tr>
                 <th>#</th>
-                <th>Адрес</th>
-                <th>Сумма</th>
+                <th>Address</th>
+                <th>Amount</th>
                 <th>Memo</th>
               </tr>
             </thead>
@@ -117,11 +116,11 @@ export function PreviewCard({ result, onProceed }: PreviewCardProps) {
                 <tr key={row.line}>
                   <td className="muted">{row.line}</td>
                   <td className="mono" title={row.address ?? undefined}>
-                    {row.address ? shortAddress(row.address) : '—'}
+                    {row.address ? shortAddress(row.address) : '-'}
                   </td>
                   <td>{row.amount}</td>
                   <td className="ellipsis" title={row.memo}>
-                    {row.memo || '—'}
+                    {row.memo || '-'}
                   </td>
                 </tr>
               ))}
@@ -138,7 +137,7 @@ export function PreviewCard({ result, onProceed }: PreviewCardProps) {
           title={canProceed ? undefined : blockers.join('; ')}
           onClick={onProceed}
         >
-          Перейти к подтверждению
+          Confirm payout
         </button>
         {blockers.length > 0 && (
           <ul className="blockers">
@@ -157,12 +156,12 @@ export function PreviewCard({ result, onProceed }: PreviewCardProps) {
 function reasonText(reason: GateReason, errorCount: number): string {
   switch (reason) {
     case 'not-connected':
-      return 'Подключите кошелёк'
+      return 'Connect wallet'
     case 'wrong-network':
-      return 'Переключитесь на сеть Moderato'
+      return 'Switch to Moderato testnet'
     case 'has-errors':
-      return `Исправьте строки с ошибками: ${errorCount}`
+      return `Fix rows with errors: ${errorCount}`
     case 'insufficient':
-      return 'Недостаточно AlphaUSD на балансе'
+      return 'Insufficient AlphaUSD balance'
   }
 }

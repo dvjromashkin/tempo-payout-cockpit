@@ -30,8 +30,8 @@ export function HistoryCard({ runs, onClear }: HistoryCardProps) {
   if (runs.length === 0) {
     return (
       <p className="muted">
-        Прогонов пока нет. После успешной отправки пакет появится здесь с
-        квитанцией.
+        Run history is empty. After a successful payout, the Atomic batch appears
+        here with a receipt.
       </p>
     )
   }
@@ -39,9 +39,9 @@ export function HistoryCard({ runs, onClear }: HistoryCardProps) {
   return (
     <div className="history">
       <div className="history__head">
-        <span className="muted">Сохранено локально в этом браузере: {runs.length}</span>
+        <span className="muted">Saved locally in this browser: {runs.length}</span>
         <button className="btn btn--ghost btn--sm" type="button" onClick={onClear}>
-          Очистить историю
+          Clear history
         </button>
       </div>
       {receiptError && (
@@ -55,11 +55,11 @@ export function HistoryCard({ runs, onClear }: HistoryCardProps) {
             <div className="history__row">
               <span className="history__when">{new Date(run.ts).toLocaleString()}</span>
               <span className={`status status--${run.status === 'success' ? 'ok' : 'err'}`}>
-                {run.status === 'success' ? 'успех' : 'ошибка'}
+                {run.status === 'success' ? 'success' : 'error'}
               </span>
             </div>
             <div className="history__row muted">
-              {run.count} выплат · {groupDecimal(run.totalAmount)} {run.tokenSymbol}
+              {run.count} payouts - {groupDecimal(run.totalAmount)} {run.tokenSymbol}
             </div>
             {run.txHash && (
               <div className="history__row mono history__hash">
@@ -76,7 +76,7 @@ export function HistoryCard({ runs, onClear }: HistoryCardProps) {
               type="button"
               onClick={() => downloadRunReceipt(run)}
             >
-              Скачать квитанцию
+              Download receipt
             </button>
           </li>
         ))}

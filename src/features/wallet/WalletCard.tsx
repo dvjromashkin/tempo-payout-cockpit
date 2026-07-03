@@ -34,8 +34,8 @@ export function WalletCard() {
     return (
       <>
         <p className="muted">
-          Подключите Tempo Wallet (кнопка вверху), чтобы увидеть адрес и баланс
-          AlphaUSD.
+          Connect Tempo Wallet from the header to view your address and AlphaUSD
+          balance.
         </p>
         <p className="muted">Tempo Wallet availability may vary by region.</p>
       </>
@@ -48,21 +48,21 @@ export function WalletCard() {
   return (
     <div className="wallet">
       <div className="wallet__row">
-        <span className="wallet__label">Сеть</span>
+        <span className="wallet__label">Network</span>
         <span className="wallet__value">
           {onModerato ? (
             <span className="status status--ok">
-              <span className="dot dot--ok" /> Moderato · {tempoModerato.id}
+              <span className="dot dot--ok" /> Moderato testnet {tempoModerato.id}
             </span>
           ) : (
             <span className="net-warn">
-              <span className="dot dot--warn" /> Не та сеть (chainId {chainId ?? '—'})
+              <span className="dot dot--warn" /> Wrong network (chainId {chainId ?? '-'})
               <button
                 className="btn btn--ghost btn--sm"
                 type="button"
                 onClick={() => switchChain({ chainId: tempoModerato.id })}
               >
-                Переключить на Moderato
+                Switch to Moderato
               </button>
             </span>
           )}
@@ -70,32 +70,32 @@ export function WalletCard() {
       </div>
 
       <div className="wallet__row">
-        <span className="wallet__label">Адрес</span>
+        <span className="wallet__label">Address</span>
         <span className="wallet__value mono" title={address}>
           {address}
         </span>
       </div>
 
       <div className="wallet__row">
-        <span className="wallet__label">Баланс</span>
+        <span className="wallet__label">Balance</span>
         <span className="wallet__value">
           {balanceError ? (
             <span className="status status--err">
               {formatReadError(balanceError)}
             </span>
           ) : balanceLoading ? (
-            <span className="muted">загрузка…</span>
+            <span className="muted">Loading...</span>
           ) : (
             <span className="balance">
-              <strong>{balance !== null ? groupDecimal(balance) : '—'}</strong>{' '}
+              <strong>{balance !== null ? groupDecimal(balance) : '-'}</strong>{' '}
               {ALPHA_USD.symbol}
               <button
                 className="btn btn--ghost btn--sm"
                 type="button"
                 onClick={() => refetch()}
-                title="Обновить баланс"
+                title="Refresh balance"
               >
-                ↻
+                Refresh
               </button>
             </span>
           )}

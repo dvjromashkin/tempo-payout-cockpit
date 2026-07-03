@@ -20,7 +20,7 @@ export function ImportCard({ result, fileName, onResult }: ImportCardProps) {
       const text = await file.text()
       onResult(parseCsv(text), file.name)
     } catch (e) {
-      setReadError(e instanceof Error ? e.message : 'Не удалось прочитать файл')
+      setReadError(e instanceof Error ? e.message : 'Could not read the file')
       onResult(null, null)
     }
   }
@@ -29,7 +29,7 @@ export function ImportCard({ result, fileName, onResult }: ImportCardProps) {
     <div className="import">
       <div className="import__controls">
         <label htmlFor={inputId} className="btn btn--primary">
-          Выбрать CSV
+          Upload CSV
         </label>
         <input
           id={inputId}
@@ -49,15 +49,15 @@ export function ImportCard({ result, fileName, onResult }: ImportCardProps) {
             type="button"
             onClick={() => onResult(null, null)}
           >
-            Очистить
+            Clear
           </button>
         )}
       </div>
 
       <p className="import__hint muted">
-        Колонки: <code>address, amount, memo</code> (заголовок и memo
-        опциональны). Содержимое файла — данные: ничего не отправляется без
-        вашего подтверждения.
+        Columns: <code>address, amount, memo</code> (header row and memo are
+        optional). File contents are data only: nothing is sent without your
+        confirmation.
       </p>
 
       {readError && <p className="status status--err">{readError}</p>}
@@ -81,23 +81,23 @@ function ImportSummary({ result }: { result: ParseResult }) {
   const total = groupDecimal(formatUnits(result.totalRaw, ALPHA_USD.decimals))
   return (
     <div className="summary">
-      <Stat label="Строк" value={String(result.rows.length)} />
+      <Stat label="Rows" value={String(result.rows.length)} />
       <Stat
-        label="Готовы"
+        label="Ready"
         value={String(result.validCount)}
         tone={result.validCount > 0 ? 'ok' : undefined}
       />
       <Stat
-        label="С ошибками"
+        label="With errors"
         value={String(result.errorCount)}
         tone={result.errorCount > 0 ? 'err' : undefined}
       />
       <Stat
-        label="Дубликаты"
+        label="Duplicates"
         value={String(result.duplicateCount)}
         tone={result.duplicateCount > 0 ? 'warn' : undefined}
       />
-      <Stat label={`Итого, ${ALPHA_USD.symbol}`} value={total} />
+      <Stat label={`Total, ${ALPHA_USD.symbol}`} value={total} />
     </div>
   )
 }
@@ -109,10 +109,10 @@ function ImportTable({ result }: { result: ParseResult }) {
         <thead>
           <tr>
             <th>#</th>
-            <th>Адрес</th>
-            <th>Сумма</th>
+            <th>Address</th>
+            <th>Amount</th>
             <th>Memo</th>
-            <th>Статус</th>
+            <th>Status</th>
           </tr>
         </thead>
         <tbody>
@@ -123,16 +123,16 @@ function ImportTable({ result }: { result: ParseResult }) {
               <tr key={row.line} className={`row row--${tone}`}>
                 <td className="muted">{row.line}</td>
                 <td className="mono" title={row.address ?? undefined}>
-                  {row.address ? shortAddress(row.address) : '—'}
+                  {row.address ? shortAddress(row.address) : '-'}
                 </td>
-                <td>{row.amount ?? '—'}</td>
+                <td>{row.amount ?? '-'}</td>
                 <td className="ellipsis" title={row.memo}>
-                  {row.memo || '—'}
+                  {row.memo || '-'}
                 </td>
                 <td>
                   {tone === 'ok' && (
                     <span className="status status--ok">
-                      <span className="dot dot--ok" /> ок
+                      <span className="dot dot--ok" /> OK
                     </span>
                   )}
                   {row.errors.map((m) => (

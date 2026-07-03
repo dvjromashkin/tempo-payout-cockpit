@@ -34,21 +34,21 @@ describe('parseCsv', () => {
 
   it('flags an invalid address', () => {
     const r = parseCsv(`0x123,1,`)
-    expect(r.rows[0].errors.some((e) => e.includes('адрес'))).toBe(true)
+    expect(r.rows[0].errors.some((e) => e.includes('address'))).toBe(true)
     expect(r.validCount).toBe(0)
   })
 
   it('treats a bad-address first row as data, not a header', () => {
     const r = parseCsv('0xBAD,100,memo')
     expect(r.rows).toHaveLength(1)
-    expect(r.rows[0].errors.some((e) => e.includes('адрес'))).toBe(true)
+    expect(r.rows[0].errors.some((e) => e.includes('address'))).toBe(true)
   })
 
   it('rejects bad amounts', () => {
     const r = parseCsv([`${A1},-1,`, `${A2},0,`, `${A1},1.1234567,`, `${A2},abc,`].join('\n'))
     expect(r.rows[0].errors.length).toBeGreaterThan(0) // negative -> bad format
-    expect(r.rows[1].errors.some((e) => e.includes('больше 0'))).toBe(true)
-    expect(r.rows[2].errors.some((e) => e.includes('после точки'))).toBe(true)
+    expect(r.rows[1].errors.some((e) => e.includes('greater than 0'))).toBe(true)
+    expect(r.rows[2].errors.some((e) => e.includes('decimal places'))).toBe(true)
     expect(r.rows[3].errors.length).toBeGreaterThan(0) // non-numeric
     expect(r.validCount).toBe(0)
   })
@@ -61,14 +61,14 @@ describe('parseCsv', () => {
   it('warns on duplicate addresses but keeps them valid', () => {
     const r = parseCsv(`${A1},1,\n${A1},2,`)
     expect(r.duplicateCount).toBe(2)
-    expect(r.rows[0].warnings.length).toBeGreaterThan(0)
+    expect(r.rows[0].warnings).toContain('duplicate address in file')
     expect(r.validCount).toBe(2)
     expect(r.totalRaw).toBe(3_000_000n)
   })
 
   it('errors on too many columns from an unquoted comma', () => {
     const r = parseCsv(`${A1},1,hello,world`)
-    expect(r.rows[0].errors.some((e) => e.includes('колон'))).toBe(true)
+    expect(r.rows[0].errors.some((e) => e.includes('too many columns'))).toBe(true)
   })
 
   it('supports a quoted memo containing a comma', () => {
@@ -80,6 +80,6 @@ describe('parseCsv', () => {
   it('reports an empty file', () => {
     const r = parseCsv('\n  \n')
     expect(r.rows).toHaveLength(0)
-    expect(r.fileErrors.length).toBeGreaterThan(0)
+    expect(r.fileErrors).toContain('No payout rows in the file')
   })
 })

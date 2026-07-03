@@ -29,7 +29,7 @@ interface Recipient {
 /**
  * Explicit pre-broadcast confirmation (hard rule): shows the full package
  * summary, then signs ONE atomic 0x76 transaction in the wallet. Nothing is
- * sent until the user clicks "Подписать и отправить".
+ * sent until the user clicks "Sign and send".
  */
 export function ConfirmDialog({ result, onClose, onSuccess }: ConfirmDialogProps) {
   const { status: acctStatus } = useAccount()
@@ -118,28 +118,28 @@ export function ConfirmDialog({ result, onClose, onSuccess }: ConfirmDialogProps
         className="modal"
         role="dialog"
         aria-modal="true"
-        aria-label="Подтверждение пакета выплат"
+        aria-label="Confirm payout"
         onClick={(e) => e.stopPropagation()}
       >
-        <h3 className="modal__title">Подтверждение пакета выплат</h3>
+        <h3 className="modal__title">Confirm payout</h3>
 
         {!isSuccess && (
           <>
             <p className="modal__lead">
-              Будет отправлено <strong>{recipients.length}</strong> выплат на сумму{' '}
+              This will send <strong>{recipients.length}</strong> payouts totaling{' '}
               <strong>
                 {totalStr} {ALPHA_USD.symbol}
               </strong>{' '}
-              одной атомарной транзакцией (газ в {ALPHA_USD.symbol}). После подписи
-              отменить нельзя.
+              in one Atomic batch (gas in {ALPHA_USD.symbol}). After signing and
+              broadcast, it cannot be cancelled.
             </p>
             <div className="table-wrap modal__list">
               <table className="table">
                 <thead>
                   <tr>
                     <th>#</th>
-                    <th>Адрес</th>
-                    <th>Сумма</th>
+                    <th>Address</th>
+                    <th>Amount</th>
                     <th>Memo</th>
                   </tr>
                 </thead>
@@ -152,7 +152,7 @@ export function ConfirmDialog({ result, onClose, onSuccess }: ConfirmDialogProps
                       </td>
                       <td>{groupDecimal(row.amount)}</td>
                       <td className="ellipsis" title={row.memo}>
-                        {row.memo || '—'}
+                        {row.memo || '-'}
                       </td>
                     </tr>
                   ))}
@@ -170,7 +170,9 @@ export function ConfirmDialog({ result, onClose, onSuccess }: ConfirmDialogProps
 
         {isSuccess && (
           <div className="modal__success">
-            <p className="status status--ok">Готово — пакет отправлен одной транзакцией.</p>
+            <p className="status status--ok">
+              Done - the Atomic batch was sent in one transaction.
+            </p>
             {hash && (
               <p className="mono modal__hash">
                 tx:{' '}
@@ -188,7 +190,7 @@ export function ConfirmDialog({ result, onClose, onSuccess }: ConfirmDialogProps
               </p>
             )}
             <button className="btn btn--ghost" type="button" onClick={downloadReceipt}>
-              Скачать квитанцию (CSV)
+              Download receipt
             </button>
           </div>
         )}
@@ -201,11 +203,11 @@ export function ConfirmDialog({ result, onClose, onSuccess }: ConfirmDialogProps
               disabled={isPending || acctStatus !== 'connected' || recipients.length === 0}
               onClick={() => payout.send(calls)}
             >
-              {isPending ? 'Отправка…' : isError ? 'Повторить' : 'Подписать и отправить'}
+              {isPending ? 'Sending...' : isError ? 'Try again' : 'Sign and send'}
             </button>
           )}
           <button className="btn btn--ghost" type="button" disabled={isPending} onClick={close}>
-            {isSuccess ? 'Закрыть' : 'Отмена'}
+            {isSuccess ? 'Close' : 'Cancel'}
           </button>
         </div>
       </div>
