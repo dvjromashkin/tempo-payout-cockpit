@@ -1,6 +1,6 @@
 # Tempo Payout Cockpit
 
-Live MVP: deployment pending
+Live MVP: [https://tempo-payout-cockpit.vercel.app](https://tempo-payout-cockpit.vercel.app/)
 
 Tempo Payout Cockpit is an experimental, browser-only dApp for mass AlphaUSD
 payouts on the Tempo Moderato testnet. Upload a CSV, review every recipient and
@@ -13,6 +13,8 @@ Tempo and is not suitable for real funds.
 ## Public MVP Status
 
 - Network: Tempo Moderato testnet only, chainId `42431`.
+- Deployment: live on Vercel at
+  [tempo-payout-cockpit.vercel.app](https://tempo-payout-cockpit.vercel.app/).
 - Token: AlphaUSD only, 6 decimals.
 - Fee token: AlphaUSD.
 - Wallet: Tempo Wallet only.
@@ -164,8 +166,8 @@ public/sample-payout.csv         Static sample CSV download for Vite/Vercel
 
 ## Reporting Bugs
 
-Report bugs in the GitHub repository:
-<https://github.com/dvjromashkin/tempo-payout-cockpit/issues>
+Report bugs in GitHub Issues:
+[open a new issue](https://github.com/dvjromashkin/tempo-payout-cockpit/issues/new).
 
 Please include browser, region if relevant to wallet access, CSV shape, expected
 result, actual result, and any public testnet transaction hash. Do not include
