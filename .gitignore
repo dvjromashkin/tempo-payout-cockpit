@@ -12,8 +12,24 @@ dist
 dist-ssr
 *.local
 
-# Claude Code local (personal) settings
-.claude/settings.local.json
+# Local AI/agent workspace artifacts
+.claude/
+.codex/
+AGENTS.md
+CLAUDE.md
+SESSION_PROMPTS.md
+MY_PREVIOUS_NOTES.md
+*_PROMPTS.md
+*prompt*.md
+
+# Local planning/scratch artifacts
+PRD.md
+PLANNING*.md
+TASKS*.md
+.local-notes/
+scratch/
+screenshots/
+docs/flow.svg
 
 # Editor directories and files
 .vscode/*
